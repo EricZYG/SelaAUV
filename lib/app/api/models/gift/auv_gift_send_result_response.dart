@@ -3,36 +3,30 @@
 /// 送礼操作返回的结果信息
 /// 
 /// 字段说明:
-/// - diamonds: 本次消耗钻石数
-/// - balance: 剩余余额
-/// - orderNo: 订单号
-/// - message: 提示信息
+/// - gid: 礼物id
+/// - deposit: 剩余钻石
+/// - becomeTopOne: 是否从非top1变成了top1
 class AuvGiftSendResultResponse {
-  /// 本次消耗钻石数
-  final int? diamonds;
-  
-  /// 剩余余额
-  final int? balance;
-  
-  /// 订单号
-  final String? orderNo;
-  
-  /// 提示信息
-  final String? message;
+  /// 礼物id
+  final int? gid;
+
+  /// 剩余钻石
+  final int? deposit;
+
+  /// 是否从非top1变成了top1
+  final int? becomeTopOne;
 
   AuvGiftSendResultResponse({
-    this.diamonds,
-    this.balance,
-    this.orderNo,
-    this.message,
+    this.gid,
+    this.deposit,
+    this.becomeTopOne,
   });
 
   factory AuvGiftSendResultResponse.fromJson(Map<String, dynamic> json) {
     return AuvGiftSendResultResponse(
-      diamonds: json['diamonds'],
-      balance: json['balance'],
-      orderNo: json['order_no'] ?? json['orderNo'],
-      message: json['message'],
+      gid: json['gid'],
+      deposit: json['deposit'],
+      becomeTopOne: json['becomeTopOne'],
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:slea_auv/app/api/auv_showdoc_routes.dart';
+import 'package:slea_auv/app/api/auv_net_routes.dart';
 import 'package:slea_auv/app/api/models/auv_models.dart';
 import 'package:slea_auv/app/api/services/auv_base_service.dart';
 import 'package:slea_auv/app/services/auv_api_service.dart';
@@ -24,14 +24,14 @@ class AuvAnchorService extends AuvBaseService {
   /// [pageSize] 每页数量（可选），默认20
   /// 
   /// 返回值: 主播列表
-  Future<AuvShowDocResponse<List<AuvAnchorResponse>>> getAnchorList({
+  Future<AuvBaseResponse<List<AuvAnchorResponse>>> getAnchorList({
     String? categoryId,
     int page = 1,
     int pageSize = 20,
   }) async {
     try {
       final response = await get(
-        AuvShowDocRoutes.anchorList,
+        AuvNetRoutes.anchorList,
         queryParameters: {
           if (categoryId != null) 'category_id': categoryId,
           'page': page,
@@ -54,12 +54,12 @@ class AuvAnchorService extends AuvBaseService {
   /// [anchorId] 主播ID（必填）
   /// 
   /// 返回值: 主播详情响应
-  Future<AuvShowDocResponse<AuvAnchorResponse>> getAnchorDetail({
+  Future<AuvBaseResponse<AuvAnchorResponse>> getAnchorDetail({
     required String anchorId,
   }) async {
     try {
       final response = await get(
-        AuvShowDocRoutes.anchorDetail,
+        AuvNetRoutes.anchorDetail,
         queryParameters: {'anchor_id': anchorId},
       );
       return handleResponse<AuvAnchorResponse>(
@@ -78,12 +78,12 @@ class AuvAnchorService extends AuvBaseService {
   /// [request] 查询请求参数（必填），包含主播ID等信息
   /// 
   /// 返回值: 主播动态列表数据响应
-  Future<AuvShowDocResponse<AuvAnchorMomentListDataResponse>> anchorGetOtherMoment({
+  Future<AuvBaseResponse<AuvAnchorMomentListDataResponse>> anchorGetOtherMoment({
     required AuvAnchorGetOtherMomentRequest request,
   }) async {
     try {
       final response = await post(
-        AuvShowDocRoutes.anchorGetOtherMoment,
+        AuvNetRoutes.anchorGetOtherMoment,
         data: request.toJson(),
         needSign: false,
       );
@@ -103,12 +103,12 @@ class AuvAnchorService extends AuvBaseService {
   /// [request] 查询请求参数（必填），包含主播ID等信息
   /// 
   /// 返回值: 用户端主播动态列表数据响应
-  Future<AuvShowDocResponse<AuvUserMomentListDataResponse>> userGetMoment({
+  Future<AuvBaseResponse<AuvUserMomentListDataResponse>> userGetMoment({
     required AuvUserGetMomentRequest request,
   }) async {
     try {
       final response = await post(
-        AuvShowDocRoutes.userGetMoment,
+        AuvNetRoutes.userGetMoment,
         data: request.toJson(),
         needSign: false,
       );
@@ -128,12 +128,12 @@ class AuvAnchorService extends AuvBaseService {
   /// [request] 评论查询请求参数（必填），包含动态ID、分页等信息
   /// 
   /// 返回值: 评论列表数据响应
-  Future<AuvShowDocResponse<AuvCommentListDataResponse>> getComments({
+  Future<AuvBaseResponse<AuvCommentListDataResponse>> getComments({
     required AuvGetCommentsRequest request,
   }) async {
     try {
       final response = await post(
-        AuvShowDocRoutes.getComments,
+        AuvNetRoutes.getComments,
         data: request.toJson(),
         needSign: false,
       );

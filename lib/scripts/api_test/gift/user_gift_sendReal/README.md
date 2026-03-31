@@ -28,10 +28,12 @@ s-sign: {signature}
 
 | 参数名 | 必填 | 类型 | 说明 |
 |--------|------|------|------|
-| gift_id | 是 | string | 礼物ID |
-| anchor_id | 是 | string | 主播ID |
-| room_id | 是 | string | 直播间ID |
-| num | 是 | int | 数量 |
+| receiverId | 是 | int | 接收方id |
+| quantity | 是 | int | 数量 |
+| gid | 是 | int | 礼物id |
+| channelName | 否 | string | 游戏房频道id |
+| begId | 否 | string | 主播索要id |
+| liveChannelName | 否 | string | 直播间频道号 |
 
 ## 签名规则
 
@@ -44,10 +46,9 @@ s-sign: {signature}
 
 ```json
 {
-  "gift_id": "1001",
-  "anchor_id": "12345",
-  "room_id": "room001",
-  "num": 1
+  "receiverId": 12345,
+  "quantity": 1,
+  "gid": 1001
 }
 ```
 
@@ -55,10 +56,14 @@ s-sign: {signature}
 
 ```json
 {
-  "code": 1006,
-  "message": "参数错误",
-  "timestamp": 1774842367562,
-  "data": null
+  "code": 0,
+  "message": "Operation succeeded",
+  "timestamp": 1700203769375,
+  "data": {
+    "gid": 1001,
+    "deposit": 4990000,
+    "becomeTopOne": 1
+  }
 }
 ```
 
@@ -74,4 +79,4 @@ s-sign: {signature}
 
 ## 说明
 
-此接口返回参数错误，可能是礼物ID、主播ID或房间ID不存在。
+送礼成功后返回礼物id、剩余钻石和是否成为top1的信息。

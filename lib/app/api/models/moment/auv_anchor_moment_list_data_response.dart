@@ -1,9 +1,56 @@
-/// 主播端查其他主播动态列表项模型
-library;
-
 import '../user/auv_level_config_response.dart';
 import 'auv_moment_media_response.dart';
 
+/// 主播端查其他主播动态列表响应数据模型
+class AuvAnchorMomentListDataResponse {
+  /// 总数
+  final int? total;
+
+  /// 列表
+  final List<AuvAnchorMomentItemResponse>? list;
+
+  /// 当前页码
+  final int? pageNum;
+
+  /// 每页条数
+  final int? pageSize;
+
+  /// 总页数
+  final int? pages;
+
+  /// 是否有上一页
+  final bool? hasPreviousPage;
+
+  /// 是否有下一页
+  final bool? hasNextPage;
+
+  AuvAnchorMomentListDataResponse({
+    this.total,
+    this.list,
+    this.pageNum,
+    this.pageSize,
+    this.pages,
+    this.hasPreviousPage,
+    this.hasNextPage,
+  });
+
+  factory AuvAnchorMomentListDataResponse.fromJson(Map<String, dynamic>? json) {
+    if (json == null) return AuvAnchorMomentListDataResponse();
+    return AuvAnchorMomentListDataResponse(
+      total: json['total'],
+      list: (json['list'] as List<dynamic>?)
+          ?.map((e) => AuvAnchorMomentItemResponse.fromJson(e))
+          .toList(),
+      pageNum: json['pageNum'],
+      pageSize: json['pageSize'],
+      pages: json['pages'],
+      hasPreviousPage: json['hasPreviousPage'],
+      hasNextPage: json['hasNextPage'],
+    );
+  }
+}
+
+/// 主播端查其他主播动态列表项模型
 class AuvAnchorMomentItemResponse {
   /// 动态id
   final int? momentId;
@@ -100,55 +147,6 @@ class AuvAnchorMomentItemResponse {
       medias: json['medias'] != null
           ? AuvMomentMediaResponse.fromJson(json['medias'])
           : null,
-    );
-  }
-}
-
-/// 主播端查其他主播动态列表响应数据模型
-class AuvAnchorMomentListDataResponse {
-  /// 总数
-  final int? total;
-
-  /// 列表
-  final List<AuvAnchorMomentItemResponse>? list;
-
-  /// 当前页码
-  final int? pageNum;
-
-  /// 每页条数
-  final int? pageSize;
-
-  /// 总页数
-  final int? pages;
-
-  /// 是否有上一页
-  final bool? hasPreviousPage;
-
-  /// 是否有下一页
-  final bool? hasNextPage;
-
-  AuvAnchorMomentListDataResponse({
-    this.total,
-    this.list,
-    this.pageNum,
-    this.pageSize,
-    this.pages,
-    this.hasPreviousPage,
-    this.hasNextPage,
-  });
-
-  factory AuvAnchorMomentListDataResponse.fromJson(Map<String, dynamic>? json) {
-    if (json == null) return AuvAnchorMomentListDataResponse();
-    return AuvAnchorMomentListDataResponse(
-      total: json['total'],
-      list: (json['list'] as List<dynamic>?)
-          ?.map((e) => AuvAnchorMomentItemResponse.fromJson(e))
-          .toList(),
-      pageNum: json['pageNum'],
-      pageSize: json['pageSize'],
-      pages: json['pages'],
-      hasPreviousPage: json['hasPreviousPage'],
-      hasNextPage: json['hasNextPage'],
     );
   }
 }

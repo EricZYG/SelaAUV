@@ -4,6 +4,7 @@
 library;
 
 export 'base/auv_base_response.dart';
+export 'base/auv_page_response.dart';
 export 'base/auv_app_config.dart';
 export 'base/auv_gift_action.dart';
 
@@ -21,6 +22,10 @@ export 'product/product_models.dart';
 
 export 'order/order_models.dart';
 
+export 'coupon/coupon_models.dart';
+
 export 'comment/comment_models.dart';
 
 export 'system/system_models.dart';
+
+export 'msg/msg_models.dart';

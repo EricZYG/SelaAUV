@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:slea_auv/app/api/auv_showdoc_routes.dart';
+import 'package:slea_auv/app/api/auv_net_routes.dart';
 import 'package:slea_auv/app/api/models/auv_models.dart';
 import 'package:slea_auv/app/api/services/auv_base_service.dart';
 import 'package:slea_auv/app/services/auv_api_service.dart';
@@ -24,14 +24,14 @@ class AuvProductService extends AuvBaseService {
   /// [pageSize] 每页数量（可选），默认20
   /// 
   /// 返回值: 礼物列表
-  Future<AuvShowDocResponse<List<AuvGiftResponse>>> getGiftList({
+  Future<AuvBaseResponse<List<AuvGiftResponse>>> getGiftList({
     String? categoryId,
     int page = 1,
     int pageSize = 20,
   }) async {
     try {
       final response = await get(
-        AuvShowDocRoutes.giftList,
+        AuvNetRoutes.giftList,
         queryParameters: {
           if (categoryId != null) 'category_id': categoryId,
           'page': page,
@@ -52,9 +52,9 @@ class AuvProductService extends AuvBaseService {
   /// 获取礼物分类列表
   /// 
   /// 返回值: 分类列表
-  Future<AuvShowDocResponse<List<AuvCategoryResponse>>> getCategoryList() async {
+  Future<AuvBaseResponse<List<AuvCategoryResponse>>> getCategoryList() async {
     try {
-      final response = await get(AuvShowDocRoutes.categoryList);
+      final response = await get(AuvNetRoutes.categoryList);
       return handleListResponse<AuvCategoryResponse>(
         response.data,
         (data) => AuvCategoryResponse.fromJson(data),

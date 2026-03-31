@@ -1,6 +1,4 @@
 /// 订单简要信息分页数据模型
-library;
-
 import 'auv_order_simple_response.dart';
 
 class AuvOrderSimpleListDataResponse {
@@ -103,47 +101,5 @@ class AuvOrderSimpleListDataResponse {
       navigateFirstPage: json['navigateFirstPage'],
       navigateLastPage: json['navigateLastPage'],
     );
-  }
-}
-
-/// 查询订单简要信息请求模型
-class AuvGetOrderSimpleListRequest {
-  /// 页码
-  final int pageNum;
-
-  /// 每页条数
-  final int pageSize;
-
-  /// 查询条件
-  final AuvGetOrderSimpleConditionRequest condition;
-
-  AuvGetOrderSimpleListRequest({
-    required this.pageNum,
-    required this.pageSize,
-    required this.condition,
-  });
-
-  Map<String, dynamic> toJson() {
-    return {
-      'pageNum': pageNum,
-      'pageSize': pageSize,
-      'condition': condition.toJson(),
-    };
-  }
-}
-
-/// 查询订单简要信息条件模型
-class AuvGetOrderSimpleConditionRequest {
-  /// 用户id
-  final int userId;
-
-  AuvGetOrderSimpleConditionRequest({
-    required this.userId,
-  });
-
-  Map<String, dynamic> toJson() {
-    return {
-      'userId': userId,
-    };
   }
 }

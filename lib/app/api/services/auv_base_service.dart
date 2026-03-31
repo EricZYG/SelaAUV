@@ -91,8 +91,35 @@ abstract class AuvBaseService extends GetxService {
     );
   }
 
+  /// DELETE请求
+  Future<dio.Response<T>> delete<T>(
+    String path, {
+    dynamic data,
+    Map<String, dynamic>? queryParameters,
+    dio.Options? options,
+    bool needSign = true,
+  }) async {
+    final signHeaders = needSign && data != null
+        ? _getSignHeaders(data is Map ? data.cast<String, dynamic>() : {})
+        : <String, String>{};
+
+    final mergedOptions = options?.copyWith(
+      headers: {
+        ...?options.headers,
+        ...signHeaders,
+      },
+    ) ?? (signHeaders.isNotEmpty ? dio.Options(headers: signHeaders) : null);
+
+    return _api.delete(
+      path,
+      data: data,
+      queryParameters: queryParameters,
+      options: mergedOptions,
+    );
+  }
+
   /// 处理单个对象响应
-  AuvShowDocResponse<T> handleResponse<T>(
+  AuvBaseResponse<T> handleResponse<T>(
     Map<String, dynamic>? json,
     T Function(dynamic)? fromJsonT,
   ) {
@@ -100,7 +127,7 @@ abstract class AuvBaseService extends GetxService {
   }
 
   /// 处理列表响应
-  AuvShowDocResponse<List<T>> handleListResponse<T>(
+  AuvBaseResponse<List<T>> handleListResponse<T>(
     Map<String, dynamic>? json,
     T Function(dynamic)? fromJsonT,
   ) {
@@ -108,12 +135,12 @@ abstract class AuvBaseService extends GetxService {
   }
 
   /// 处理空响应
-  AuvShowDocResponse<void> handleVoidResponse(Map<String, dynamic>? json) {
+  AuvBaseResponse<void> handleVoidResponse(Map<String, dynamic>? json) {
     return AuvResponseHandler.handleVoid(json);
   }
 
   /// 处理单个值响应（如int等简单类型）
-  AuvShowDocResponse<T> handleSingleValueResponse<T>(
+  AuvBaseResponse<T> handleSingleValueResponse<T>(
     Map<String, dynamic>? json,
     T Function(dynamic)? fromJsonT,
   ) {
@@ -121,7 +148,7 @@ abstract class AuvBaseService extends GetxService {
   }
 
   /// 处理嵌套对象响应（如data.list结构）
-  AuvShowDocResponse<T> handleObjectResponse<T>(
+  AuvBaseResponse<T> handleObjectResponse<T>(
     Map<String, dynamic>? json,
     T Function(Map<String, dynamic>)? fromJsonT,
   ) {
@@ -129,7 +156,37 @@ abstract class AuvBaseService extends GetxService {
   }
 
   /// 处理错误响应
-  AuvShowDocResponse<T> handleError<T>(dynamic error) {
+  AuvBaseResponse<T> handleError<T>(dynamic error) {
     return AuvResponseHandler.handleError<T>(error);
+  }
+
+  /// 处理简单响应（返回简单bool/int等）
+  AuvBaseResponse<T> handleSimpleResponse<T>(
+    Map<String, dynamic>? json,
+    T Function(dynamic)? fromJsonT,
+  ) {
+    return AuvResponseHandler.handleSingleValue(json, fromJsonT);
+  }
+
+  /// 处理分页响应
+  AuvBaseResponse<AuvPageResponse<T>> handlePageResponse<T>(
+    Map<String, dynamic>? json,
+    T Function(Map<String, dynamic>) fromJsonT,
+  ) {
+    if (json == null) {
+      return AuvBaseResponse(
+        code: -1,
+        message: 'Empty response',
+        timestamp: DateTime.now().millisecondsSinceEpoch,
+      );
+    }
+    return AuvBaseResponse(
+      code: json['code'] ?? -1,
+      message: json['message'] ?? '',
+      timestamp: json['timestamp'] ?? 0,
+      data: json['data'] != null
+          ? AuvPageResponse.fromJson(json['data'], fromJsonT)
+          : null,
+    );
   }
 }

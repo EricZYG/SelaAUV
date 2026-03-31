@@ -1,4 +1,4 @@
-import 'package:dio/dio.dart' as dio;
+import 'package:dio/dio.dart';
 import 'package:slea_auv/app/api/models/auv_models.dart';
 
 /// API 错误处理工具类
@@ -20,37 +20,30 @@ class AuvApiError {
     this.originalError,
   });
 
-  /// 从 DioException 创建错误
-  factory AuvApiError.fromDioException(dio.DioException e) {
+  /// 从 DioError 创建错误
+  factory AuvApiError.fromDioException(DioError e) {
     String message;
     int code = -1;
 
     switch (e.type) {
-      case dio.DioExceptionType.connectionTimeout:
+      case DioErrorType.connectTimeout:
         message = 'Connection timeout';
         break;
-      case dio.DioExceptionType.sendTimeout:
+      case DioErrorType.sendTimeout:
         message = 'Send timeout';
         break;
-      case dio.DioExceptionType.receiveTimeout:
+      case DioErrorType.receiveTimeout:
         message = 'Receive timeout';
         break;
-      case dio.DioExceptionType.badCertificate:
-        message = 'Bad certificate';
-        break;
-      case dio.DioExceptionType.badResponse:
+      case DioErrorType.response:
         code = e.response?.statusCode ?? -1;
         message = _parseBadResponseMessage(e.response);
         break;
-      case dio.DioExceptionType.cancel:
+      case DioErrorType.cancel:
         message = 'Request cancelled';
         break;
-      case dio.DioExceptionType.connectionError:
-        message = 'Connection error';
-        break;
-      case dio.DioExceptionType.unknown:
-      default:
-        message = e.message ?? 'Unknown network error';
+      case DioErrorType.other:
+        message = e.message.isNotEmpty ? e.message : 'Unknown network error';
     }
 
     return AuvApiError(
@@ -61,7 +54,7 @@ class AuvApiError {
   }
 
   /// 解析响应错误消息
-  static String _parseBadResponseMessage(dio.Response? response) {
+  static String _parseBadResponseMessage(Response? response) {
     if (response == null) return 'Server error';
 
     try {
@@ -87,19 +80,19 @@ class AuvResponseHandler {
   /// [json] 响应JSON数据
   /// [fromJsonT] 类型转换函数
   /// [T] 目标数据类型
-  static AuvShowDocResponse<T> handle<T>(
+  static AuvBaseResponse<T> handle<T>(
     Map<String, dynamic>? json,
     T Function(dynamic)? fromJsonT,
   ) {
     if (json == null) {
-      return AuvShowDocResponse<T>(
+      return AuvBaseResponse<T>(
         code: -1,
         message: 'Empty response',
         timestamp: DateTime.now().millisecondsSinceEpoch,
       );
     }
 
-    return AuvShowDocResponse<T>(
+    return AuvBaseResponse<T>(
       code: json['code'] ?? -1,
       message: json['message'] ?? '',
       timestamp: json['timestamp'] ?? 0,
@@ -114,12 +107,12 @@ class AuvResponseHandler {
   /// [json] 响应JSON数据
   /// [fromJsonT] 类型转换函数
   /// [T] 目标数据类型
-  static AuvShowDocResponse<List<T>> handleList<T>(
+  static AuvBaseResponse<List<T>> handleList<T>(
     Map<String, dynamic>? json,
     T Function(dynamic)? fromJsonT,
   ) {
     if (json == null) {
-      return AuvShowDocResponse<List<T>>(
+      return AuvBaseResponse<List<T>>(
         code: -1,
         message: 'Empty response',
         timestamp: DateTime.now().millisecondsSinceEpoch,
@@ -135,7 +128,7 @@ class AuvResponseHandler {
       }
     }
 
-    return AuvShowDocResponse<List<T>>(
+    return AuvBaseResponse<List<T>>(
       code: json['code'] ?? -1,
       message: json['message'] ?? '',
       timestamp: json['timestamp'] ?? 0,
@@ -144,16 +137,16 @@ class AuvResponseHandler {
   }
 
   /// 处理空响应（仅返回状态）
-  static AuvShowDocResponse<void> handleVoid(Map<String, dynamic>? json) {
+  static AuvBaseResponse<void> handleVoid(Map<String, dynamic>? json) {
     if (json == null) {
-      return AuvShowDocResponse<void>(
+      return AuvBaseResponse<void>(
         code: -1,
         message: 'Empty response',
         timestamp: DateTime.now().millisecondsSinceEpoch,
       );
     }
 
-    return AuvShowDocResponse<void>(
+    return AuvBaseResponse<void>(
       code: json['code'] ?? -1,
       message: json['message'] ?? '',
       timestamp: json['timestamp'] ?? 0,
@@ -162,19 +155,19 @@ class AuvResponseHandler {
   }
 
   /// 处理单个值响应（如int等简单类型）
-  static AuvShowDocResponse<T> handleSingleValue<T>(
+  static AuvBaseResponse<T> handleSingleValue<T>(
     Map<String, dynamic>? json,
     T Function(dynamic)? fromJsonT,
   ) {
     if (json == null) {
-      return AuvShowDocResponse<T>(
+      return AuvBaseResponse<T>(
         code: -1,
         message: 'Empty response',
         timestamp: DateTime.now().millisecondsSinceEpoch,
       );
     }
 
-    return AuvShowDocResponse<T>(
+    return AuvBaseResponse<T>(
       code: json['code'] ?? -1,
       message: json['message'] ?? '',
       timestamp: json['timestamp'] ?? 0,
@@ -185,19 +178,19 @@ class AuvResponseHandler {
   }
 
   /// 处理嵌套对象响应（如data.list结构）
-  static AuvShowDocResponse<T> handleObject<T>(
+  static AuvBaseResponse<T> handleObject<T>(
     Map<String, dynamic>? json,
     T Function(Map<String, dynamic>)? fromJsonT,
   ) {
     if (json == null) {
-      return AuvShowDocResponse<T>(
+      return AuvBaseResponse<T>(
         code: -1,
         message: 'Empty response',
         timestamp: DateTime.now().millisecondsSinceEpoch,
       );
     }
 
-    return AuvShowDocResponse<T>(
+    return AuvBaseResponse<T>(
       code: json['code'] ?? -1,
       message: json['message'] ?? '',
       timestamp: json['timestamp'] ?? 0,
@@ -208,11 +201,11 @@ class AuvResponseHandler {
   }
 
   /// 处理 API 错误响应
-  static AuvShowDocResponse<T> handleError<T>(dynamic error) {
+  static AuvBaseResponse<T> handleError<T>(dynamic error) {
     String message;
     int code = -1;
 
-    if (error is dio.DioException) {
+    if (error is DioError) {
       final apiError = AuvApiError.fromDioException(error);
       message = apiError.message;
       code = apiError.code;
@@ -220,7 +213,7 @@ class AuvResponseHandler {
       message = error.toString();
     }
 
-    return AuvShowDocResponse<T>(
+    return AuvBaseResponse<T>(
       code: code,
       message: message,
       timestamp: DateTime.now().millisecondsSinceEpoch,

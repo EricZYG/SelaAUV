@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:slea_auv/app/api/auv_showdoc_routes.dart';
+import 'package:slea_auv/app/api/auv_net_routes.dart';
 import 'package:slea_auv/app/api/models/auv_models.dart';
 import 'package:slea_auv/app/api/services/auv_base_service.dart';
 import 'package:slea_auv/app/services/auv_api_service.dart';
@@ -25,9 +25,9 @@ class AuvSystemService extends AuvBaseService {
   ///   setSignKey(result.data!.ok!);
   /// }
   /// ```
-  Future<AuvShowDocResponse<AuvAppConfigResponse>> getAppConfig() async {
+  Future<AuvBaseResponse<AuvAppConfigResponse>> getAppConfig() async {
     try {
-      final response = await get(AuvShowDocRoutes.appConfig);
+      final response = await get(AuvNetRoutes.appConfig);
       return handleResponse<AuvAppConfigResponse>(
         response.data,
         (data) => AuvAppConfigResponse.fromJson(data),
@@ -48,9 +48,9 @@ class AuvSystemService extends AuvBaseService {
   ///   }
   /// }
   /// ```
-  Future<AuvShowDocResponse<List<AuvAreaResponse>>> getAreas() async {
+  Future<AuvBaseResponse<List<AuvAreaResponse>>> getAreas() async {
     try {
-      final response = await get(AuvShowDocRoutes.getAreas);
+      final response = await get(AuvNetRoutes.getAreas);
       return handleListResponse<AuvAreaResponse>(
         response.data,
         (data) => AuvAreaResponse.fromJson(data),
@@ -71,9 +71,9 @@ class AuvSystemService extends AuvBaseService {
   ///   }
   /// }
   /// ```
-  Future<AuvShowDocResponse<List<AuvAiConfigResponse>>> getAiConfigs() async {
+  Future<AuvBaseResponse<List<AuvAiConfigResponse>>> getAiConfigs() async {
     try {
-      final response = await get(AuvShowDocRoutes.getAiConfigs);
+      final response = await get(AuvNetRoutes.getAiConfigs);
       return handleListResponse<AuvAiConfigResponse>(
         response.data,
         (data) => AuvAiConfigResponse.fromJson(data),
@@ -94,12 +94,12 @@ class AuvSystemService extends AuvBaseService {
   ///   }
   /// }
   /// ```
-  Future<AuvShowDocResponse<List<AuvPayoutChannelResponse>>> getPayoutChannels({
+  Future<AuvBaseResponse<List<AuvPayoutChannelResponse>>> getPayoutChannels({
     required int countryCode,
   }) async {
     try {
       final response = await get(
-        AuvShowDocRoutes.getPayoutChannels,
+        AuvNetRoutes.getPayoutChannels,
         queryParameters: {'countryCode': countryCode},
       );
       return handleListResponse<AuvPayoutChannelResponse>(
@@ -122,9 +122,9 @@ class AuvSystemService extends AuvBaseService {
   ///   }
   /// }
   /// ```
-  Future<AuvShowDocResponse<List<AuvTagCategoryResponse>>> getTagConfigs() async {
+  Future<AuvBaseResponse<List<AuvTagCategoryResponse>>> getTagConfigs() async {
     try {
-      final response = await get(AuvShowDocRoutes.getTagConfigs);
+      final response = await get(AuvNetRoutes.getTagConfigs);
       return handleListResponse<AuvTagCategoryResponse>(
         response.data,
         (data) => AuvTagCategoryResponse.fromJson(data),
@@ -145,9 +145,9 @@ class AuvSystemService extends AuvBaseService {
   ///   }
   /// }
   /// ```
-  Future<AuvShowDocResponse<AuvAdvertisementListResponse>> getAdvertisement() async {
+  Future<AuvBaseResponse<AuvAdvertisementListResponse>> getAdvertisement() async {
     try {
-      final response = await get(AuvShowDocRoutes.getAdvertisement);
+      final response = await get(AuvNetRoutes.getAdvertisement);
       return handleObjectResponse<AuvAdvertisementListResponse>(
         response.data,
         (data) => AuvAdvertisementListResponse.fromJson(data),
@@ -167,9 +167,9 @@ class AuvSystemService extends AuvBaseService {
   ///   print('Region check: ${passed ? "passed" : "failed"}');
   /// }
   /// ```
-  Future<AuvShowDocResponse<int>> checkRegion() async {
+  Future<AuvBaseResponse<int>> checkRegion() async {
     try {
-      final response = await get(AuvShowDocRoutes.checkRegion);
+      final response = await get(AuvNetRoutes.checkRegion);
       return handleSingleValueResponse<int>(
         response.data,
         (data) => data is int ? data : int.tryParse(data.toString()) ?? 0,
@@ -190,9 +190,9 @@ class AuvSystemService extends AuvBaseService {
   ///   }
   /// }
   /// ```
-  Future<AuvShowDocResponse<List<String>>> getAigConfigs() async {
+  Future<AuvBaseResponse<List<String>>> getAigConfigs() async {
     try {
-      final response = await get(AuvShowDocRoutes.getAigConfigs);
+      final response = await get(AuvNetRoutes.getAigConfigs);
       return handleListResponse<String>(
         response.data,
         (data) => data.toString(),
@@ -213,15 +213,112 @@ class AuvSystemService extends AuvBaseService {
   ///   }
   /// }
   /// ```
-  Future<AuvShowDocResponse<List<AuvSensitiveWordResponse>>> getSensitiveWordsV2() async {
+  Future<AuvBaseResponse<List<AuvSensitiveWordResponse>>> getSensitiveWordsV2() async {
     try {
-      final response = await get(AuvShowDocRoutes.getSensitiveWordsV2);
+      final response = await get(AuvNetRoutes.getSensitiveWordsV2);
       return handleListResponse<AuvSensitiveWordResponse>(
         response.data,
         (data) => AuvSensitiveWordResponse.fromJson(data),
       );
     } catch (e) {
       return handleError<List<AuvSensitiveWordResponse>>(e);
+    }
+  }
+
+  /// 获取AI Help菜单列表
+  ///
+  /// 示例:
+  /// ```dart
+  /// final result = await systemService.getAiHelpConfigList(lang: 'zh');
+  /// if (result.success && result.data != null) {
+  ///   for (final menu in result.data!) {
+  ///     print('${menu.title}: ${menu.contentTypeDesc}');
+  ///   }
+  /// }
+  /// ```
+  Future<AuvBaseResponse<List<AuvAiHelpMenuItemResponse>>> getAiHelpConfigList({
+    String? lang,
+  }) async {
+    try {
+      final response = await post(
+        AuvNetRoutes.getAiHelpConfigList,
+        queryParameters: lang != null ? {'lang': lang} : null,
+      );
+      return handleListResponse<AuvAiHelpMenuItemResponse>(
+        response.data,
+        (data) => AuvAiHelpMenuItemResponse.fromJson(data),
+      );
+    } catch (e) {
+      return handleError<List<AuvAiHelpMenuItemResponse>>(e);
+    }
+  }
+
+  /// 获取AI Help记录列表
+  ///
+  /// 示例:
+  /// ```dart
+  /// final result = await systemService.getAiHelpRecords(
+  ///   lang: 'zh',
+  ///   userId: 1698902146478649346,
+  /// );
+  /// if (result.success && result.data != null) {
+  ///   for (final record in result.data!) {
+  ///     print('${record.id}: ${record.statusDesc}');
+  ///   }
+  /// }
+  /// ```
+  Future<AuvBaseResponse<List<AuvAiHelpRecordResponse>>> getAiHelpRecords({
+    String? lang,
+    required int userId,
+  }) async {
+    try {
+      final response = await post(
+        AuvNetRoutes.getAiHelpRecords,
+        queryParameters: lang != null ? {'lang': lang} : null,
+        data: {'userId': userId},
+      );
+      return handleListResponse<AuvAiHelpRecordResponse>(
+        response.data,
+        (data) => AuvAiHelpRecordResponse.fromJson(data),
+      );
+    } catch (e) {
+      return handleError<List<AuvAiHelpRecordResponse>>(e);
+    }
+  }
+
+  /// 保存AI Help表单或聊天数据
+  ///
+  /// 示例:
+  /// ```dart
+  /// final result = await systemService.saveAiHelpRecord(
+  ///   userId: 1698902146478649346,
+  ///   contentType: 1,
+  ///   content: 'Hello, I need help',
+  /// );
+  /// if (result.success) {
+  ///   print('保存成功');
+  /// }
+  /// ```
+  Future<AuvBaseResponse<bool>> saveAiHelpRecord({
+    required int userId,
+    required int contentType,
+    required String content,
+  }) async {
+    try {
+      final response = await post(
+        AuvNetRoutes.saveAiHelpRecord,
+        data: {
+          'userId': userId,
+          'contentType': contentType,
+          'content': content,
+        },
+      );
+      return handleSingleValueResponse<bool>(
+        response.data,
+        (data) => data == true,
+      );
+    } catch (e) {
+      return handleError<bool>(e);
     }
   }
 }

@@ -1,7 +1,8 @@
 import 'package:get/get.dart';
-import 'package:slea_auv/app/api/auv_showdoc_routes.dart';
+import 'package:slea_auv/app/api/auv_net_routes.dart';
 import 'package:slea_auv/app/api/models/auv_models.dart';
 import 'package:slea_auv/app/api/models/user/auv_guild_login_response.dart';
+import 'package:slea_auv/app/api/models/user/auv_bind_google_request.dart';
 import 'package:slea_auv/app/api/services/auv_base_service.dart';
 import 'package:slea_auv/app/services/auv_api_service.dart';
 
@@ -28,7 +29,7 @@ class AuvAuthService extends AuvBaseService {
   /// 返回值: 包含userId和authorization的登录响应
   /// 
   /// 注意: 此接口需要签名验证
-  Future<AuvShowDocResponse<AuvLoginResponse>> guestLogin({
+  Future<AuvBaseResponse<AuvLoginResponse>> guestLogin({
     required String password,
     int? aidLimit,
     String? aid,
@@ -43,7 +44,7 @@ class AuvAuthService extends AuvBaseService {
       };
 
       final response = await post(
-        AuvShowDocRoutes.guestLogin,
+        AuvNetRoutes.guestLogin,
         data: data,
         needSign: true,
       );
@@ -66,7 +67,7 @@ class AuvAuthService extends AuvBaseService {
   /// 返回值: 包含userId和token的登录响应
   /// 
   /// 注意: 此接口需要签名验证
-  Future<AuvShowDocResponse<AuvLoginResponse>> phoneLogin({
+  Future<AuvBaseResponse<AuvLoginResponse>> phoneLogin({
     required String phone,
     required String code,
   }) async {
@@ -77,7 +78,7 @@ class AuvAuthService extends AuvBaseService {
       };
 
       final response = await post(
-        AuvShowDocRoutes.phoneLogin,
+        AuvNetRoutes.phoneLogin,
         data: data,
         needSign: true,
       );
@@ -99,14 +100,14 @@ class AuvAuthService extends AuvBaseService {
   /// 返回值: 包含userId和token的登录响应
   /// 
   /// 注意: 此接口需要签名验证
-  Future<AuvShowDocResponse<AuvLoginResponse>> googleLogin({
+  Future<AuvBaseResponse<AuvLoginResponse>> googleLogin({
     required String idToken,
   }) async {
     try {
       final data = {'id_token': idToken};
 
       final response = await post(
-        AuvShowDocRoutes.googleLogin,
+        AuvNetRoutes.googleLogin,
         data: data,
         needSign: true,
       );
@@ -130,7 +131,7 @@ class AuvAuthService extends AuvBaseService {
   /// 返回值: 包含userId和token的登录响应
   /// 
   /// 注意: 此接口需要签名验证
-  Future<AuvShowDocResponse<AuvLoginResponse>> appleLogin({
+  Future<AuvBaseResponse<AuvLoginResponse>> appleLogin({
     required String identityToken,
     String? authorizationCode,
     String? name,
@@ -143,7 +144,7 @@ class AuvAuthService extends AuvBaseService {
       };
 
       final response = await post(
-        AuvShowDocRoutes.appleLogin,
+        AuvNetRoutes.appleLogin,
         data: data,
         needSign: true,
       );
@@ -168,7 +169,7 @@ class AuvAuthService extends AuvBaseService {
   /// - code=1031: 不能再用邀请码登录，此时返回的data为账号id
   /// 
   /// 注意: 此接口需要签名验证
-  Future<AuvShowDocResponse<AuvGuildLoginResponse>> guildLogin({
+  Future<AuvBaseResponse<AuvGuildLoginResponse>> guildLogin({
     required String username,
     required String password,
   }) async {
@@ -179,7 +180,7 @@ class AuvAuthService extends AuvBaseService {
       };
 
       final response = await post(
-        AuvShowDocRoutes.guildLogin,
+        AuvNetRoutes.guildLogin,
         data: data,
         needSign: true,
       );
@@ -192,14 +193,87 @@ class AuvAuthService extends AuvBaseService {
       // 根据响应码构建不同类型的响应
       final guildLoginResponse = AuvGuildLoginResponse.fromData(responseData, isSuccess);
 
-      return AuvShowDocResponse(
-        success: isSuccess,
+      return AuvBaseResponse(
         code: code,
         message: response.data['message'] ?? (isSuccess ? 'Operation succeeded' : 'Operation failed'),
+        timestamp: response.data['timestamp'] ?? DateTime.now().millisecondsSinceEpoch,
         data: guildLoginResponse,
       );
     } catch (e) {
       return handleError<AuvGuildLoginResponse>(e);
+    }
+  }
+
+  /// 绑定谷歌账号
+  /// 
+  /// 将Google账号绑定到当前登录用户
+  /// 
+  /// [request] 绑定请求参数，包含：
+  ///   - id: 谷歌openId（必填）
+  ///   - nickname: 昵称（可选）
+  ///   - cover: 头像（可选）
+  ///   - token: 登录token（可选）
+  ///   - email: 邮箱（可选）
+  /// 
+  /// 返回值: 空响应
+  /// 
+  /// 错误码:
+  /// - code=0: 绑定成功
+  /// - code=1018: 谷歌账号已被其他账号绑定
+  /// 
+  /// 注意: 此接口需要签名验证
+  Future<AuvBaseResponse<void>> bindGoogle({
+    required AuvBindGoogleRequest request,
+  }) async {
+    try {
+      final response = await post(
+        AuvNetRoutes.bindGoogle,
+        data: request.toJson(),
+        needSign: true,
+      );
+      return handleVoidResponse(response.data);
+    } catch (e) {
+      return handleError<void>(e);
+    }
+  }
+
+  /// 账号密码登录
+  /// 
+  /// 使用用户名和密码进行登录
+  /// 
+  /// [username] 用户名（必填）
+  /// [password] 加密后的密码（必填）
+  /// [aidLimit] 是否限制广告id获取，0.未限制，1.限制获取（可选）
+  /// [aid] 广告id（可选）
+  /// 
+  /// 返回值: 包含userId和authorization的登录响应
+  /// 
+  /// 注意: 此接口需要签名验证
+  Future<AuvBaseResponse<AuvLoginResponse>> passwordLogin({
+    required String username,
+    required String password,
+    int? aidLimit,
+    String? aid,
+  }) async {
+    try {
+      final data = {
+        'username': username,
+        'password': password,
+        if (aidLimit != null) 'aidLimit': aidLimit,
+        if (aid != null) 'aid': aid,
+      };
+
+      final response = await post(
+        AuvNetRoutes.passwordLogin,
+        data: data,
+        needSign: true,
+      );
+      return handleResponse<AuvLoginResponse>(
+        response.data,
+        (data) => AuvLoginResponse.fromJson(data),
+      );
+    } catch (e) {
+      return handleError<AuvLoginResponse>(e);
     }
   }
 }

@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:slea_auv/app/api/auv_showdoc_routes.dart';
+import 'package:slea_auv/app/api/auv_net_routes.dart';
 import 'package:slea_auv/app/api/models/auv_models.dart';
 import 'package:slea_auv/app/api/services/auv_base_service.dart';
 import 'package:slea_auv/app/services/auv_api_service.dart';
@@ -22,12 +22,12 @@ class AuvMomentService extends AuvBaseService {
   /// [request] 发布动态请求参数（必填），包含动态内容、媒体文件等
   /// 
   /// 返回值: 发布成功的动态ID
-  Future<AuvShowDocResponse<int>> publishMoment({
+  Future<AuvBaseResponse<int>> publishMoment({
     required AuvPublishMomentRequest request,
   }) async {
     try {
       final response = await post(
-        AuvShowDocRoutes.publishMoment,
+        AuvNetRoutes.publishMoment,
         data: request.toJson(),
         needSign: false,
       );
@@ -47,12 +47,12 @@ class AuvMomentService extends AuvBaseService {
   /// [request] 更新可见范围请求参数（必填），包含动态ID和可见类型
   /// 
   /// 返回值: 空响应
-  Future<AuvShowDocResponse<void>> updateMomentVisibleType({
+  Future<AuvBaseResponse<void>> updateMomentVisibleType({
     required AuvUpdateMomentVisibleRequest request,
   }) async {
     try {
       final response = await post(
-        AuvShowDocRoutes.updateMomentVisibleType,
+        AuvNetRoutes.updateMomentVisibleType,
         data: request.toJson(),
         needSign: false,
       );
@@ -69,12 +69,12 @@ class AuvMomentService extends AuvBaseService {
   /// [request] 查询请求参数（必填），包含分页信息等
   /// 
   /// 返回值: 我的动态列表数据响应
-  Future<AuvShowDocResponse<AuvMyMomentListDataResponse>> getMyMoment({
+  Future<AuvBaseResponse<AuvMyMomentListDataResponse>> getMyMoment({
     required AuvGetMyMomentRequest request,
   }) async {
     try {
       final response = await post(
-        AuvShowDocRoutes.getMyMoment,
+        AuvNetRoutes.getMyMoment,
         data: request.toJson(),
         needSign: false,
       );
@@ -94,12 +94,12 @@ class AuvMomentService extends AuvBaseService {
   /// [momentId] 动态ID（必填）
   /// 
   /// 返回值: 动态详情响应
-  Future<AuvShowDocResponse<AuvMomentDetailResponse>> getOneMoment({
+  Future<AuvBaseResponse<AuvMomentDetailResponse>> getOneMoment({
     required int momentId,
   }) async {
     try {
       final response = await get(
-        AuvShowDocRoutes.getOneMoment,
+        AuvNetRoutes.getOneMoment,
         queryParameters: {'momentId': momentId},
       );
       return handleResponse<AuvMomentDetailResponse>(
@@ -116,9 +116,9 @@ class AuvMomentService extends AuvBaseService {
   /// 检查用户关注的主播是否有新发布的动态
   /// 
   /// 返回值: 新动态数量
-  Future<AuvShowDocResponse<int>> hasNewFollowMoment() async {
+  Future<AuvBaseResponse<int>> hasNewFollowMoment() async {
     try {
-      final response = await get(AuvShowDocRoutes.hasNewFollowMoment);
+      final response = await get(AuvNetRoutes.hasNewFollowMoment);
       return handleResponse<int>(
         response.data,
         (data) => data as int? ?? 0,

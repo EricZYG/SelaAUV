@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
-import 'package:slea_auv/app/api/auv_showdoc_routes.dart';
+import 'package:slea_auv/app/api/auv_net_routes.dart';
 import 'package:slea_auv/app/api/models/auv_models.dart';
 import 'package:slea_auv/app/api/services/auv_base_service.dart';
 import 'package:slea_auv/app/services/auv_api_service.dart';
-import 'package:slea_auv/app/models/auv_msg_model.dart';
+import 'package:slea_auv/app/models/auv_msg_model.dart' hide AuvSendMsgInGameRoomRequest;
 
 /// 消息服务
 /// 
@@ -23,12 +23,12 @@ class AuvMsgService extends AuvBaseService {
   /// [request] 发送消息请求参数（必填），包含接收者ID、消息内容等
   /// 
   /// 返回值: 发送结果响应
-  Future<AuvShowDocResponse<AuvSendMsgResponse>> sendMsg({
+  Future<AuvBaseResponse<AuvSendMsgResponse>> sendMsg({
     required AuvSendMsgRequest request,
   }) async {
     try {
       final response = await post(
-        AuvShowDocRoutes.sendMsg,
+        AuvNetRoutes.sendMsg,
         data: request.toJson(),
         needSign: false,
       );
@@ -48,12 +48,12 @@ class AuvMsgService extends AuvBaseService {
   /// [request] 通话中发送消息请求参数（必填），包含频道ID、消息内容等
   /// 
   /// 返回值: 发送结果响应
-  Future<AuvShowDocResponse<AuvSendMsgResponse>> sendMsgInCall({
+  Future<AuvBaseResponse<AuvSendMsgResponse>> sendMsgInCall({
     required AuvSendMsgInCallRequest request,
   }) async {
     try {
       final response = await post(
-        AuvShowDocRoutes.sendMsgInCall,
+        AuvNetRoutes.sendMsgInCall,
         data: request.toJson(),
         needSign: false,
       );
@@ -73,12 +73,37 @@ class AuvMsgService extends AuvBaseService {
   /// [request] 游戏房间发送消息请求参数（必填），包含房间ID、消息内容等
   /// 
   /// 返回值: 发送结果响应
-  Future<AuvShowDocResponse<AuvSendMsgResponse>> sendMsgInGameRoom({
+  Future<AuvBaseResponse<AuvSendMsgResponse>> sendMsgInGameRoom({
     required AuvSendMsgInGameRoomRequest request,
   }) async {
     try {
       final response = await post(
-        AuvShowDocRoutes.sendMsgInGameRoom,
+        AuvNetRoutes.sendMsgInGameRoom,
+        data: request.toJson(),
+        needSign: false,
+      );
+      return handleResponse<AuvSendMsgResponse>(
+        response.data,
+        (data) => AuvSendMsgResponse.fromJson(data),
+      );
+    } catch (e) {
+      return handleError<AuvSendMsgResponse>(e);
+    }
+  }
+
+  /// 直播间中发送消息
+  /// 
+  /// 在直播间内发送实时消息
+  /// 
+  /// [request] 直播间发送消息请求参数（必填），包含频道号、消息内容等
+  /// 
+  /// 返回值: 发送结果响应
+  Future<AuvBaseResponse<AuvSendMsgResponse>> sendMsgInLiveRoom({
+    required AuvSendMsgInLiveRoomRequest request,
+  }) async {
+    try {
+      final response = await post(
+        AuvNetRoutes.sendMsgInLiveRoom,
         data: request.toJson(),
         needSign: false,
       );
@@ -98,12 +123,12 @@ class AuvMsgService extends AuvBaseService {
   /// [params] 查询参数（必填），包含用户ID、房间ID、分页信息等
   /// 
   /// 返回值: 消息记录列表
-  Future<AuvShowDocResponse<List<AuvMsgRecord>>> getMsgRecords({
+  Future<AuvBaseResponse<List<AuvMsgRecord>>> getMsgRecords({
     required AuvGetMsgRecordsParams params,
   }) async {
     try {
       final response = await get(
-        AuvShowDocRoutes.getMsgRecords,
+        AuvNetRoutes.getMsgRecords,
         queryParameters: params.toQueryParams(),
       );
       return handleListResponse<AuvMsgRecord>(

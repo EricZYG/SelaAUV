@@ -13,6 +13,30 @@ class AuvApiService {
   late final dio.Dio _dio;
   String? _signKey;
 
+  /// 需要签名的路由列表
+  /// 
+  /// 签名规则：
+  /// 1. 将请求参数按照参数名ASCII码从小到大排序（字典序）
+  /// 2. 使用URL键值对格式拼接成字符串 stringA
+  /// 3. 在stringA最后拼接 time 和 key，得到 stringSignTemp
+  /// 4. 对stringSignTemp进行MD5运算，结果转小写得到sign值
+  static const List<String> _signRoutes = [
+    // 登录注册相关
+    '/user/login/guest',
+    '/user/login/phone',
+    '/user/login/google',
+    '/user/login/apple',
+    '/user/login/password',
+    '/manager/login/guild',
+    // 签到
+    '/user/sign/signIn',
+    // 下单
+    '/p/order/createOrder',
+    // 送礼
+    '/user/gift/sendReal',
+    '/user/gift/sendLucky',
+  ];
+
   /// 初始化 Sign Key（从应用配置接口获取）
   void setSignKey(String key) {
     _signKey = key;
@@ -57,8 +81,8 @@ class AuvApiService {
           options.headers['Authorization'] = 'Bearer $token';
         }
 
-        // 添加签名
-        _addSign(options);
+        // 仅对需要签名的路由添加签名
+        _addSignIfNeeded(options);
 
         return handler.next(options);
       },
@@ -71,8 +95,22 @@ class AuvApiService {
 
   dio.Dio get dioClient => _dio;
 
-  /// 添加签名到请求头
-  void _addSign(dio.RequestOptions options) {
+  /// 检查路由是否需要签名
+  bool _needsSign(String path) {
+    for (final route in _signRoutes) {
+      if (path.contains(route)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /// 仅对需要签名的路由添加签名
+  void _addSignIfNeeded(dio.RequestOptions options) {
+    if (!_needsSign(options.path)) {
+      return;
+    }
+
     final time = DateTime.now().millisecondsSinceEpoch.toString();
     options.headers['s-time'] = time;
 
@@ -92,6 +130,11 @@ class AuvApiService {
       final sign = AuvSignUtil.generateSign(params, time, _signKey!);
       options.headers['s-sign'] = sign;
     }
+  }
+
+  /// 添加签名到请求头（保留向后兼容）
+  void _addSign(dio.RequestOptions options) {
+    _addSignIfNeeded(options);
   }
 
   Future<dio.Response<T>> get<T>(

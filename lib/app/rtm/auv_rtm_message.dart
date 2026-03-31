@@ -191,3 +191,55 @@ class AuvGiftExtra {
     };
   }
 }
+
+/// 心动等级变化消息扩展数据
+class AuvHeartbeatLevelChangeExtra {
+  /// 变化前的等级
+  final int oldLevel;
+
+  /// 变化后的等级
+  final int newLevel;
+
+  /// 变化后的心动值
+  final int totalScore;
+
+  /// 主播ID
+  final int anchorId;
+
+  /// 用户ID
+  final int userId;
+
+  AuvHeartbeatLevelChangeExtra({
+    required this.oldLevel,
+    required this.newLevel,
+    required this.totalScore,
+    required this.anchorId,
+    required this.userId,
+  });
+
+  factory AuvHeartbeatLevelChangeExtra.fromJson(Map<String, dynamic> json) {
+    return AuvHeartbeatLevelChangeExtra(
+      oldLevel: json['oldLevel'] as int? ?? 0,
+      newLevel: json['newLevel'] as int? ?? 0,
+      totalScore: json['totalScore'] as int? ?? 0,
+      anchorId: json['anchorId'] as int? ?? 0,
+      userId: json['userId'] as int? ?? 0,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'oldLevel': oldLevel,
+      'newLevel': newLevel,
+      'totalScore': totalScore,
+      'anchorId': anchorId,
+      'userId': userId,
+    };
+  }
+
+  /// 是否是等级提升
+  bool get isLevelUp => newLevel > oldLevel;
+
+  /// 等级变化量
+  int get levelDiff => newLevel - oldLevel;
+}

@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
-import 'package:slea_auv/app/api/auv_showdoc_routes.dart';
+import 'package:slea_auv/app/api/auv_net_routes.dart';
 import 'package:slea_auv/app/api/models/auv_models.dart';
+import 'package:slea_auv/app/api/models/order/order_models.dart';
 import 'package:slea_auv/app/api/services/auv_base_service.dart';
 import 'package:slea_auv/app/services/auv_api_service.dart';
-import 'package:slea_auv/app/models/auv_msg_model.dart';
 
 /// 支付服务
 /// 
@@ -23,12 +23,12 @@ class AuvPaymentService extends AuvBaseService {
   /// [type] 商品类型（必填），如充值商品、VIP商品等
   /// 
   /// 返回值: 商品列表
-  Future<AuvShowDocResponse<List<AuvProduct>>> getProducts({
+  Future<AuvBaseResponse<List<AuvProduct>>> getProducts({
     required AuvProductType type,
   }) async {
     try {
       final response = await get(
-        AuvShowDocRoutes.getProducts,
+        AuvNetRoutes.getProducts,
         queryParameters: {'type': type.value},
       );
       return handleListResponse<AuvProduct>(
@@ -48,13 +48,13 @@ class AuvPaymentService extends AuvBaseService {
   /// [countryCode] 国家代码（必填），用于获取当地价格
   /// 
   /// 返回值: 商品信息
-  Future<AuvShowDocResponse<AuvProduct>> getCountryProduct({
+  Future<AuvBaseResponse<AuvProduct>> getCountryProduct({
     required int productId,
     required int countryCode,
   }) async {
     try {
       final response = await get(
-        AuvShowDocRoutes.getCountryProduct,
+        AuvNetRoutes.getCountryProduct,
         queryParameters: {
           'productId': productId,
           'countryCode': countryCode,
@@ -74,9 +74,9 @@ class AuvPaymentService extends AuvBaseService {
   /// 获取官方支持的支付商品ID列表，用于支付校验
   /// 
   /// 返回值: 商品ID列表
-  Future<AuvShowDocResponse<List<String>>> getProductCodes() async {
+  Future<AuvBaseResponse<List<String>>> getProductCodes() async {
     try {
-      final response = await get(AuvShowDocRoutes.getProductCodes);
+      final response = await get(AuvNetRoutes.getProductCodes);
       return handleListResponse<String>(
         response.data,
         (data) => data.toString(),
@@ -93,12 +93,12 @@ class AuvPaymentService extends AuvBaseService {
   /// [params] 订单查询参数（必填），包含分页信息、订单状态筛选等
   /// 
   /// 返回值: 订单列表响应
-  Future<AuvShowDocResponse<AuvOrderListResponse>> getOrderList({
+  Future<AuvBaseResponse<AuvOrderListResponse>> getOrderList({
     required AuvOrderListParams params,
   }) async {
     try {
       final response = await post(
-        AuvShowDocRoutes.getOrderList,
+        AuvNetRoutes.getOrderList,
         data: params.toJson(),
         needSign: false,
       );
@@ -118,12 +118,12 @@ class AuvPaymentService extends AuvBaseService {
   /// [orderNos] 订单号列表（必填）
   /// 
   /// 返回值: 订单状态列表
-  Future<AuvShowDocResponse<List<AuvOrderStatusItem>>> getOrderStatusBatch({
+  Future<AuvBaseResponse<List<AuvOrderStatusItem>>> getOrderStatusBatch({
     required List<String> orderNos,
   }) async {
     try {
       final response = await post(
-        AuvShowDocRoutes.getOrderStatusBatch,
+        AuvNetRoutes.getOrderStatusBatch,
         data: {'orderNos': orderNos},
         needSign: false,
       );
@@ -145,12 +145,12 @@ class AuvPaymentService extends AuvBaseService {
   /// 返回值: 创建的订单响应
   /// 
   /// 注意: 此接口需要签名验证
-  Future<AuvShowDocResponse<AuvCreateOrderResponse>> createOrder({
+  Future<AuvBaseResponse<AuvCreateOrderResponse>> createOrder({
     required AuvCreateOrderParams params,
   }) async {
     try {
       final response = await post(
-        AuvShowDocRoutes.createOrder,
+        AuvNetRoutes.createOrder,
         data: params.toJson(),
         needSign: true,
       );
@@ -168,9 +168,9 @@ class AuvPaymentService extends AuvBaseService {
   /// 获取用户可领取的优惠券列表
   /// 
   /// 返回值: 优惠券列表
-  Future<AuvShowDocResponse<List<AuvCoupon>>> getNewCoupon() async {
+  Future<AuvBaseResponse<List<AuvCoupon>>> getNewCoupon() async {
     try {
-      final response = await get(AuvShowDocRoutes.getNewCoupon);
+      final response = await get(AuvNetRoutes.getNewCoupon);
       return handleListResponse<AuvCoupon>(
         response.data,
         (data) => AuvCoupon.fromJson(data),
@@ -187,12 +187,12 @@ class AuvPaymentService extends AuvBaseService {
   /// [couponId] 优惠券ID（必填）
   /// 
   /// 返回值: 空响应
-  Future<AuvShowDocResponse<void>> takeCoupon({
+  Future<AuvBaseResponse<void>> takeCoupon({
     required int couponId,
   }) async {
     try {
       final response = await post(
-        '${AuvShowDocRoutes.takeCoupon}/$couponId',
+        '${AuvNetRoutes.takeCoupon}/$couponId',
         needSign: false,
       );
       return handleVoidResponse(response.data);
@@ -208,12 +208,12 @@ class AuvPaymentService extends AuvBaseService {
   /// [available] 是否只查询可用优惠券（必填），1-只查可用，0-全部
   /// 
   /// 返回值: 用户优惠券列表
-  Future<AuvShowDocResponse<List<AuvUserCoupon>>> getUserCoupons({
+  Future<AuvBaseResponse<List<AuvUserCoupon>>> getUserCoupons({
     required int available,
   }) async {
     try {
       final response = await get(
-        AuvShowDocRoutes.getUserCoupons,
+        AuvNetRoutes.getUserCoupons,
         queryParameters: {'available': available},
       );
       return handleListResponse<AuvUserCoupon>(
@@ -232,12 +232,12 @@ class AuvPaymentService extends AuvBaseService {
   /// [type] 商品类型（必填）
   /// 
   /// 返回值: 带优惠券的商品列表
-  Future<AuvShowDocResponse<List<AuvProductWithCouponResponse>>> getProductsWithCoupon({
+  Future<AuvBaseResponse<List<AuvProductWithCouponResponse>>> getProductsWithCoupon({
     required AuvProductType type,
   }) async {
     try {
       final response = await get(
-        AuvShowDocRoutes.getProductsWithCoupon,
+        AuvNetRoutes.getProductsWithCoupon,
         queryParameters: {'type': type.value},
       );
       return handleListResponse<AuvProductWithCouponResponse>(
@@ -256,12 +256,12 @@ class AuvPaymentService extends AuvBaseService {
   /// [whichOne] 抽奖序号（必填），用于区分不同轮次的抽奖
   /// 
   /// 返回值: 中奖商品信息
-  Future<AuvShowDocResponse<AuvLotteryProductResponse?>> getLotteryProduct({
+  Future<AuvBaseResponse<AuvLotteryProductResponse?>> getLotteryProduct({
     required int whichOne,
   }) async {
     try {
       final response = await get(
-        AuvShowDocRoutes.getLotteryProduct,
+        AuvNetRoutes.getLotteryProduct,
         queryParameters: {'whichOne': whichOne},
       );
       return handleResponse<AuvLotteryProductResponse?>(
@@ -278,9 +278,9 @@ class AuvPaymentService extends AuvBaseService {
   /// 获取分次订单的领取状态和记录
   /// 
   /// 返回值: 分次订单响应
-  Future<AuvShowDocResponse<AuvSplitOrderResponse?>> getSplitOrder() async {
+  Future<AuvBaseResponse<AuvSplitOrderResponse?>> getSplitOrder() async {
     try {
-      final response = await get(AuvShowDocRoutes.getSplitOrder);
+      final response = await get(AuvNetRoutes.getSplitOrder);
       return handleResponse<AuvSplitOrderResponse?>(
         response.data,
         (data) => data != null ? AuvSplitOrderResponse.fromJson(data) : null,
@@ -295,10 +295,10 @@ class AuvPaymentService extends AuvBaseService {
   /// 领取分次订单的下一期奖励
   /// 
   /// 返回值: 空响应
-  Future<AuvShowDocResponse<void>> takeSplitReward() async {
+  Future<AuvBaseResponse<void>> takeSplitReward() async {
     try {
       final response = await post(
-        AuvShowDocRoutes.takeSplitReward,
+        AuvNetRoutes.takeSplitReward,
         needSign: false,
       );
       return handleVoidResponse(response.data);
@@ -314,12 +314,12 @@ class AuvPaymentService extends AuvBaseService {
   /// [userId] 用户ID（必填），被索要的用户
   /// 
   /// 返回值: 索要充值响应
-  Future<AuvShowDocResponse<AuvBegRechargeResponse?>> begRecharge({
+  Future<AuvBaseResponse<AuvBegRechargeResponse?>> begRecharge({
     required int userId,
   }) async {
     try {
       final response = await post(
-        AuvShowDocRoutes.begRecharge,
+        AuvNetRoutes.begRecharge,
         data: {'userId': userId},
         needSign: false,
       );
@@ -337,9 +337,9 @@ class AuvPaymentService extends AuvBaseService {
   /// 获取降档营销活动的配置信息
   /// 
   /// 返回值: 降档营销配置
-  Future<AuvShowDocResponse<AuvDowngradeConfigResponse?>> getDowngradeConfig() async {
+  Future<AuvBaseResponse<AuvDowngradeConfigResponse?>> getDowngradeConfig() async {
     try {
-      final response = await get(AuvShowDocRoutes.getDowngradeConfig);
+      final response = await get(AuvNetRoutes.getDowngradeConfig);
       return handleResponse<AuvDowngradeConfigResponse?>(
         response.data,
         (data) => data != null ? AuvDowngradeConfigResponse.fromJson(data) : null,
@@ -356,12 +356,12 @@ class AuvPaymentService extends AuvBaseService {
   /// [roundNo] 轮次编号（必填）
   /// 
   /// 返回值: 降档营销商品
-  Future<AuvShowDocResponse<AuvDowngradeProductResponse?>> getDowngradeProduct({
+  Future<AuvBaseResponse<AuvDowngradeProductResponse?>> getDowngradeProduct({
     required int roundNo,
   }) async {
     try {
       final response = await get(
-        AuvShowDocRoutes.getDowngradeProduct,
+        AuvNetRoutes.getDowngradeProduct,
         queryParameters: {'roundNo': roundNo},
       );
       return handleResponse<AuvDowngradeProductResponse?>(
@@ -378,9 +378,9 @@ class AuvPaymentService extends AuvBaseService {
   /// 获取可兑换的商品商城列表
   /// 
   /// 返回值: 商城列表
-  Future<AuvShowDocResponse<List<AuvExchangeStoreResponse>?>> getStores() async {
+  Future<AuvBaseResponse<List<AuvExchangeStoreResponse>?>> getStores() async {
     try {
-      final response = await get(AuvShowDocRoutes.getStores);
+      final response = await get(AuvNetRoutes.getStores);
       return handleListResponse<AuvExchangeStoreResponse>(
         response.data,
         (data) => AuvExchangeStoreResponse.fromJson(data),
@@ -397,13 +397,13 @@ class AuvPaymentService extends AuvBaseService {
   /// [storeId] 商城商品ID（必填）
   /// 
   /// 返回值: 空响应
-  Future<AuvShowDocResponse<void>> exchangeDiamonds({
+  Future<AuvBaseResponse<void>> exchangeDiamonds({
     required int storeId,
   }) async {
     try {
       final response = await post(
-        AuvShowDocRoutes.exchangeDiamonds,
-        data: {'storeId': storeId,
+        AuvNetRoutes.exchangeDiamonds,
+        data: {'storeId': storeId},
       );
       return handleVoidResponse(response.data);
     } catch (e) {
@@ -419,13 +419,13 @@ class AuvPaymentService extends AuvBaseService {
   /// [orderNo] 订单号（必填）
   /// 
   /// 返回值: payerMax密钥响应
-  Future<AuvShowDocResponse<AuvPayerMaxKeyResponse?>> createPayerMaxKey({
+  Future<AuvBaseResponse<AuvPayerMaxKeyResponse?>> createPayerMaxKey({
     required int uid,
     required String orderNo,
   }) async {
     try {
       final response = await post(
-        AuvShowDocRoutes.createPayerMaxKey,
+        AuvNetRoutes.createPayerMaxKey,
         data: {
           'uid': uid,
           'orderNo': orderNo,
@@ -451,7 +451,7 @@ class AuvPaymentService extends AuvBaseService {
   /// [sessionKey] 会话密钥（必填）
   /// 
   /// 返回值: payerMax订单响应
-  Future<AuvShowDocResponse<AuvPayerMaxKeyResponse?>> createPayerMaxOrder({
+  Future<AuvBaseResponse<AuvPayerMaxKeyResponse?>> createPayerMaxOrder({
     required int uid,
     required String orderNo,
     required String paymentToken,
@@ -459,7 +459,7 @@ class AuvPaymentService extends AuvBaseService {
   }) async {
     try {
       final response = await post(
-        AuvShowDocRoutes.createPayerMaxOrder,
+        AuvNetRoutes.createPayerMaxOrder,
         data: {
           'uid': uid,
           'orderNo': orderNo,
@@ -484,12 +484,12 @@ class AuvPaymentService extends AuvBaseService {
   /// [request] 订单查询请求（必填），包含订单号列表等
   /// 
   /// 返回值: 订单简要信息列表
-  Future<AuvShowDocResponse<AuvOrderSimpleListDataResponse?>> getOrderSimpleList({
+  Future<AuvBaseResponse<AuvOrderSimpleListDataResponse?>> getOrderSimpleList({
     required AuvGetOrderSimpleListRequest request,
   }) async {
     try {
       final response = await post(
-        AuvShowDocRoutes.getOrderSimpleList,
+        AuvNetRoutes.getOrderSimpleList,
         data: request.toJson(),
         needSign: false,
       );

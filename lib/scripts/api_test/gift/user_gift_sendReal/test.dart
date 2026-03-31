@@ -14,19 +14,23 @@ const String API_METHOD = 'POST';
 const bool NEED_SIGN = true;
 
 Future<Map<String, dynamic>> sendRealGift({
-  required String giftId,
-  required String anchorId,
-  required String roomId,
-  required int num,
+  required int receiverId,
+  required int quantity,
+  required int gid,
+  String? channelName,
+  String? begId,
+  String? liveChannelName,
   String? signKey,
 }) async {
   final dio = createDioClient();
 
   final params = <String, dynamic>{
-    'gift_id': giftId,
-    'anchor_id': anchorId,
-    'room_id': roomId,
-    'num': num,
+    'receiverId': receiverId,
+    'quantity': quantity,
+    'gid': gid,
+    if (channelName != null) 'channelName': channelName,
+    if (begId != null) 'begId': begId,
+    if (liveChannelName != null) 'liveChannelName': liveChannelName,
   };
 
   if (NEED_SIGN && signKey != null) {
@@ -50,10 +54,9 @@ void main() async {
     print('正在调用 $API_NAME...\n');
 
     final result = await sendRealGift(
-      giftId: '1001',
-      anchorId: '12345',
-      roomId: 'room001',
-      num: 1,
+      receiverId: 12345,
+      quantity: 1,
+      gid: 1001,
       signKey: 'your_sign_key',
     );
 
