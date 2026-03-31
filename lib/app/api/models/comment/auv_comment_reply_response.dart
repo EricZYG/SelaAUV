@@ -1,5 +1,4 @@
 /// 评论回复模型
-library;
 
 import '../user/auv_level_config_response.dart';
 

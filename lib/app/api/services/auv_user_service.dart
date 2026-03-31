@@ -1,12 +1,15 @@
 import 'package:get/get.dart';
 import 'package:slea_auv/app/api/auv_net_routes.dart';
 import 'package:slea_auv/app/api/models/auv_models.dart';
+import 'package:slea_auv/app/api/models/user/user_models.dart';
 import 'package:slea_auv/app/api/services/auv_base_service.dart';
 import 'package:slea_auv/app/services/auv_api_service.dart';
-import 'package:slea_auv/app/models/auv_msg_model.dart';
+import 'package:slea_auv/app/api/models/auv_msg_model.dart';
 
 import '../models/user/auv_relation_count_response.dart';
 import '../models/user/auv_like_list_response.dart';
+import '../models/user/auv_follow_list_response.dart';
+import '../models/user/auv_follow_list_v2_response.dart';
 
 /// 用户服务
 /// 

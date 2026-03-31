@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:slea_auv/app/api/auv_api_routes.dart';
-import 'package:slea_auv/app/models/auv_task_model.dart';
+import 'package:slea_auv/app/api/models/auv_task_model.dart';
 import 'package:slea_auv/app/services/auv_api_service.dart';
 import 'package:slea_auv/app/api/auv_api_result.dart';
 

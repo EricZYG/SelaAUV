@@ -1,5 +1,4 @@
 /// 单条动态详情模型
-library;
 
 import '../user/auv_level_config_response.dart';
 import 'auv_moment_media_response.dart';

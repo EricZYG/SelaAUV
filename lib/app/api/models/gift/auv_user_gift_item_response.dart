@@ -1,3 +1,5 @@
+export 'auv_user_gift_list_data_response.dart';
+
 /// 普通礼物项模型
 ///
 /// 获取普通礼物列表接口返回的礼物数据
@@ -66,43 +68,4 @@ class AuvUserGiftItemResponse {
 
   /// 是否是VIP礼物
   bool get isVipGift => giftType == 2;
-}
-
-/// 普通礼物列表响应数据模型(分页)
-class AuvUserGiftListDataResponse {
-  /// 总记录数
-  final int? total;
-
-  /// 礼物列表
-  final List<AuvUserGiftItemResponse>? list;
-
-  /// 当前页码
-  final int? pageNum;
-
-  /// 每页数量
-  final int? pageSize;
-
-  /// 总页数
-  final int? pages;
-
-  AuvUserGiftListDataResponse({
-    this.total,
-    this.list,
-    this.pageNum,
-    this.pageSize,
-    this.pages,
-  });
-
-  factory AuvUserGiftListDataResponse.fromJson(Map<String, dynamic>? json) {
-    if (json == null) return AuvUserGiftListDataResponse();
-    return AuvUserGiftListDataResponse(
-      total: json['total'],
-      list: (json['list'] as List<dynamic>?)
-          ?.map((e) => AuvUserGiftItemResponse.fromJson(e))
-          .toList(),
-      pageNum: json['pageNum'],
-      pageSize: json['pageSize'],
-      pages: json['pages'],
-    );
-  }
 }

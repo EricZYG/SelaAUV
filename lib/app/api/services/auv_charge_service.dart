@@ -3,7 +3,7 @@
 /// 处理金币充值、VIP购买、充值记录等相关接口
 import 'package:get/get.dart';
 import 'package:slea_auv/app/api/auv_api_routes.dart';
-import 'package:slea_auv/app/models/auv_match_model.dart';
+import 'package:slea_auv/app/api/models/auv_match_model.dart';
 import 'package:slea_auv/app/services/auv_api_service.dart';
 import 'package:slea_auv/app/api/auv_api_result.dart';
 

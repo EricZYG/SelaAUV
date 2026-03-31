@@ -1,7 +1,8 @@
 import '../auv_net_routes.dart';
-import '../models/auv_models.dart' hide AuvCommentItemResponse;
+import '../models/auv_models.dart';
 import 'auv_base_service.dart';
 import '../models/topia/auv_topic_tag_response.dart';
+import '../models/topia/auv_comment_item_response.dart';
 
 /// Topia 相关 API 服务
 class AuvTopiaService extends AuvBaseService {
@@ -381,7 +382,7 @@ class AuvTopiaService extends AuvBaseService {
   ///   }
   /// }
   /// ```
-  Future<AuvBaseResponse<AuvPageResponse<AuvCommentItemResponse>>> pageComments({
+  Future<AuvBaseResponse<AuvPageResponse<AuvTopiaCommentItemResponse>>> pageComments({
     required AuvCommentCondition condition,
     required int pageNum,
     required int pageSize,
@@ -395,12 +396,12 @@ class AuvTopiaService extends AuvBaseService {
           'pageSize': pageSize,
         },
       );
-      return handlePageResponse<AuvCommentItemResponse>(
+      return handlePageResponse<AuvTopiaCommentItemResponse>(
         response.data,
-        (data) => AuvCommentItemResponse.fromJson(data),
+        (data) => AuvTopiaCommentItemResponse.fromJson(data),
       );
     } catch (e) {
-      return handleError<AuvPageResponse<AuvCommentItemResponse>>(e);
+      return handleError<AuvPageResponse<AuvTopiaCommentItemResponse>>(e);
     }
   }
 }

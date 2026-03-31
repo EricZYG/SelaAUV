@@ -2,3 +2,4 @@
 library;
 
 export 'auv_coupon.dart';
+export 'auv_user_coupon.dart';

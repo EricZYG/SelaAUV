@@ -6,3 +6,4 @@ export 'auv_comment_request.dart';
 export 'auv_comment_reply_response.dart';
 export 'auv_comment_item_response.dart';
 export 'auv_comment_list_data_response.dart';
+export 'auv_get_comments_request.dart';

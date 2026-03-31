@@ -1,13 +1,5 @@
+import 'auv_follow_list_v2_request.dart';
 import 'auv_follow_list_response.dart';
-
-/// 关注列表V2请求模型
-class AuvFollowListV2Request {
-  final int type;
-
-  AuvFollowListV2Request({required this.type});
-
-  Map<String, dynamic> toJson() => {'type': type};
-}
 
 /// 关注列表V2项响应模型
 class AuvFollowListV2ItemResponse {

@@ -1,14 +1,16 @@
+import '../../enums/auv_call.dart';
+
 /// 挂断通话请求模型
-/// 
+///
 /// 用户或主播结束通话时提交的数据
 class AuvEndCallRequest {
   /// 频道id
-  /// 
+  ///
   /// 通话频道的唯一标识符
   final int channelId;
   
   /// 挂断原因
-  /// 
+  ///
   /// 标识通话结束的原因
   /// - 0.正常挂断
   /// - 1.对方未接
@@ -22,32 +24,32 @@ class AuvEndCallRequest {
   final int endType;
   
   /// 客户端挂断时间
-  /// 
+  ///
   /// 客户端记录的实际挂断时间（毫秒时间戳）
   final int? clientEndAt;
   
   /// 客户端通话时长
-  /// 
+  ///
   /// 客户端计算的通话持续时长（毫秒）
   final int? clientDuration;
   
   /// 不在视频范围内的时长
-  /// 
+  ///
   /// 用户不在摄像头可视范围内的累计时长（毫秒）
   final int? outDuration;
   
   /// 不在视频范围内的次数
-  /// 
+  ///
   /// 用户离开视频画面或关闭视频的次数
   final int? outCount;
   
   /// 请求次数
-  /// 
+  ///
   /// 通话建立过程中发送的请求总次数
   final int? requestCount;
   
   /// 匹配模式
-  /// 
+  ///
   /// 1.隐私模式
   final int? matchMode;
 
@@ -76,7 +78,7 @@ class AuvEndCallRequest {
   }
 
   /// 获取挂断原因描述
-  /// 
+  ///
   /// 返回可读性更好的挂断原因文字说明
   String get endTypeDesc {
     switch (endType) {
@@ -102,39 +104,4 @@ class AuvEndCallRequest {
         return '未知';
     }
   }
-}
-
-/// 挂断原因枚举
-/// 
-/// 通话结束的原因类型
-enum AuvCallEndType {
-  /// 正常挂断
-  normal(0),
-  
-  /// 对方未接
-  notAnswered(1),
-  
-  /// 对方拒绝
-  rejected(2),
-  
-  /// 通话超时
-  timeout(3),
-  
-  /// 网络异常
-  networkError(4),
-  
-  /// 用户主动挂断
-  userHangup(5),
-  
-  /// 对方挂断
-  peerHangup(6),
-  
-  /// 系统中断
-  systemInterrupt(7),
-  
-  /// 余额不足
-  insufficientBalance(8);
-
-  final int value;
-  const AuvCallEndType(this.value);
 }

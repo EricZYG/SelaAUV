@@ -2,7 +2,7 @@
 /// 
 /// 处理1v1视频匹配相关接口：开始匹配、取消匹配、匹配历史等
 import 'package:slea_auv/app/api/auv_api_routes.dart';
-import 'package:slea_auv/app/models/auv_match_model.dart';
+import 'package:slea_auv/app/api/models/auv_match_model.dart';
 import 'package:slea_auv/app/services/auv_api_service.dart';
 import 'package:slea_auv/app/api/auv_api_result.dart';
 import 'package:get/get.dart';

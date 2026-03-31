@@ -3,7 +3,7 @@ import 'package:slea_auv/app/api/auv_net_routes.dart';
 import 'package:slea_auv/app/api/models/auv_models.dart';
 import 'package:slea_auv/app/api/services/auv_base_service.dart';
 import 'package:slea_auv/app/services/auv_api_service.dart';
-import 'package:slea_auv/app/models/auv_msg_model.dart' hide AuvSendMsgInGameRoomRequest;
+import 'package:slea_auv/app/api/models/auv_msg_model.dart' hide AuvSendMsgInGameRoomRequest;
 
 /// 消息服务
 /// 

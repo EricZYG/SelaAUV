@@ -1,10 +1,11 @@
 /// 聊天服务
-/// 
+///
 /// 处理私聊相关接口：聊天列表、聊天历史、发送消息等
 import 'package:dio/dio.dart' as dio;
 import 'package:get/get.dart';
 import 'package:slea_auv/app/api/auv_api_routes.dart';
-import 'package:slea_auv/app/models/auv_match_model.dart';
+import 'package:slea_auv/app/api/models/auv_match_model.dart';
+import 'package:slea_auv/app/api/enums/auv_message_type.dart';
 import 'package:slea_auv/app/services/auv_api_service.dart';
 import 'package:slea_auv/app/api/auv_api_result.dart';
 

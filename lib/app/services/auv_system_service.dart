@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
 import 'package:slea_auv/app/api/auv_api_routes.dart';
 import 'package:slea_auv/app/api/auv_api_result.dart';
-import 'package:slea_auv/app/models/auv_app_config.dart';
-import 'package:slea_auv/app/models/auv_banner_model.dart';
-import 'package:slea_auv/app/models/auv_language_config.dart';
+import 'package:slea_auv/app/api/models/auv_app_config_data.dart';
+import 'package:slea_auv/app/api/models/auv_banner_model.dart';
+import 'package:slea_auv/app/api/models/auv_language_config.dart';
 import 'package:slea_auv/app/services/auv_api_service.dart';
 
 /// 系统服务

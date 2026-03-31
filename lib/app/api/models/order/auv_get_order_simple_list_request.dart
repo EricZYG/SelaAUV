@@ -1,4 +1,5 @@
 import 'auv_order_list_request.dart';
+import 'auv_order_list_condition.dart';
 
 /// 获取简单订单列表请求模型
 class AuvGetOrderSimpleListRequest {
