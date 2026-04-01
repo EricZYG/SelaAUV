@@ -11,9 +11,6 @@ import 'package:slea_auv/app/utils/auv_sign_util.dart';
 abstract class AuvBaseService extends GetxService {
   late final AuvApiService _api;
 
-  /// 签名密钥（从应用配置接口获取的 ok 参数）
-  String? _signKey;
-
   /// 初始化服务
   /// 
   /// [api] AuvApiService实例
@@ -21,17 +18,17 @@ abstract class AuvBaseService extends GetxService {
     _api = api;
   }
 
-  /// 设置签名密钥
+  /// 设置签名密钥（同时同步到 AuvApiService）
   /// 
   /// [key] 从getAppConfig接口返回的ok字段值
   /// 
   /// 调用时机: 在调用需要签名的接口之前，需要先调用getAppConfig获取并设置
   void setSignKey(String key) {
-    _signKey = key;
+    _api.setSignKey(key);
   }
 
-  /// 获取签名密钥
-  String? get signKey => _signKey;
+  /// 获取签名密钥（从 AuvApiService 获取）
+  String? get signKey => _api.signKey;
 
   /// 获取签名请求头
   /// 
@@ -42,8 +39,8 @@ abstract class AuvBaseService extends GetxService {
   Map<String, String> _getSignHeaders(Map<String, dynamic> params) {
     final timestamp = DateTime.now().millisecondsSinceEpoch.toString();
     String sign = '';
-    if (_signKey != null) {
-      sign = AuvSignUtil.generateSign(params, timestamp, _signKey!);
+    if (_api.signKey != null) {
+      sign = AuvSignUtil.generateSign(params, timestamp, _api.signKey!);
     }
     return {
       's-time': timestamp,

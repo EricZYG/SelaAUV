@@ -3,9 +3,12 @@ import 'package:slea_auv/app/services/auv_storage_service.dart';
 import 'package:slea_auv/app/routes/auv_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:slea_auv/app/api/services/auv_auth_service.dart';
+import 'package:slea_auv/app/core/auv_config.dart';
 
 class AuvLoginLogic extends GetxController {
   final AuvStorageService _storage = Get.find<AuvStorageService>();
+  final AuvAuthService _authService = AuvAuthService.create();
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: ['email', 'https://www.googleapis.com/auth/contacts.readonly'],
   );
@@ -21,12 +24,58 @@ class AuvLoginLogic extends GetxController {
     isPasswordVisible.value = !isPasswordVisible.value;
   }
 
+  /// 游客登录 - 调用真实API
   Future<void> loginAsVisitor() async {
     isLoading.value = true;
     try {
-      await Future.delayed(const Duration(milliseconds: 800));
-      await _storage.saveVisitorSession();
-      Get.offAllNamed(AuvRoutes.home);
+      // Generate a simple device identifier for guest login
+      final deviceId = AuvConfig.debugDeviceId;
+      
+      // Call the real guest login API
+      final result = await _authService.guestLogin(
+        password: deviceId,
+      );
+
+      if (result.success && result.data != null) {
+        // Save the login response to storage
+        await _storage.saveLoginResponse(result.data!);
+        
+        // Show success message
+        Get.snackbar(
+          'Success',
+          'Welcome, ${result.data!.username}',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green.withValues(alpha: 0.9),
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(16),
+          borderRadius: 12,
+        );
+        
+        // Navigate to home
+        Get.offAllNamed(AuvRoutes.home);
+      } else {
+        // API returned error
+        Get.snackbar(
+          'Login Failed',
+          result.message ?? 'Unable to login as visitor',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red.withValues(alpha: 0.9),
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(16),
+          borderRadius: 12,
+        );
+      }
+    } catch (e) {
+      // Network or other error
+      Get.snackbar(
+        'Error',
+        'Network error. Please try again.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red.withValues(alpha: 0.9),
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(16),
+        borderRadius: 12,
+      );
     } finally {
       isLoading.value = false;
     }

@@ -5,33 +5,68 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:slea_auv/app/routes/auv_pages.dart';
+import 'package:slea_auv/app/routes/auv_routes.dart';
 import 'package:slea_auv/app/services/auv_storage_service.dart';
+import 'package:slea_auv/app/services/auv_api_service.dart';
 import 'package:slea_auv/app/core/auv_theme.dart';
+import 'package:slea_auv/app/utils/auv_logger.dart';
 
 void main() async {
+  // 确保 Flutter binding 在 root zone 中初始化
   WidgetsFlutterBinding.ensureInitialized();
-  
+
+  // 设置错误处理（在 root zone 中）
+  FlutterError.onError = (FlutterErrorDetails details) {
+    AuvLogger.error('FlutterError caught!', tag: 'ERROR', error: details.exception, stackTrace: details.stack);
+    FlutterError.presentError(details);
+  };
+
+  ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
+    AuvLogger.error('ErrorWidget built', tag: 'ERROR', error: errorDetails.exception, stackTrace: errorDetails.stack);
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error_outline, color: Colors.red, size: 64),
+            const SizedBox(height: 16),
+            Text(
+              'Error: ${errorDetails.exception}',
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  };
+
+  PlatformDispatcher.instance.onError = (error, stack) {
+    AuvLogger.error('PlatformDispatcher error', tag: 'ERROR', error: error, stackTrace: stack);
+    return true;
+  };
+
+  // 初始化 Logger
+  AuvLogger.init();
+  AuvLogger.info('Application starting...', tag: 'MAIN');
+
   // Initialize Storage Service
+  AuvLogger.info('Initializing Storage Service...', tag: 'MAIN');
   await Get.putAsync(() => AuvStorageService().init());
+  AuvLogger.success('Storage Service initialized', tag: 'MAIN');
 
-  runZonedGuarded(() async {
-    FlutterError.onError = (FlutterErrorDetails details) {
-      FlutterError.presentError(details);
-    };
+  // Initialize API Service (singleton)
+  AuvLogger.info('Initializing API Service...', tag: 'MAIN');
+  final apiService = AuvApiService();
+  apiService.init();
+  Get.put<AuvApiService>(apiService);
+  AuvLogger.success('API Service initialized', tag: 'MAIN');
 
-    ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
-      return Center(
-        child: CupertinoActivityIndicator(),
-      );
-    };
+  AuvLogger.info('Running app...', tag: 'MAIN');
 
-    PlatformDispatcher.instance.onError = (error, stack) {
-      return true;
-    };
+  _sleaAppSetting();
 
-    _sleaAppSetting();
-  }, (Object error, StackTrace stack) {
-  });
+  AuvLogger.info('Starting GetMaterialApp with initial route: ${AuvRoutes.splash}', tag: 'MAIN');
+  runApp(const SleaAUVApp());
 }
 
 void _sleaAppSetting() {

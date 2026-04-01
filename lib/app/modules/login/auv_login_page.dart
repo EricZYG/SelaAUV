@@ -55,10 +55,21 @@ class AuvLoginPage extends GetView<AuvLoginLogic> {
               ),
             ],
           ),
-          child: const Icon(
-            Icons.message_outlined,
-            size: 50,
-            color: Color(0xFF667eea),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(25),
+            child: Image.asset(
+              'assets/images/logo.png',
+              width: 100,
+              height: 100,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return const Icon(
+                  Icons.message_outlined,
+                  size: 50,
+                  color: Color(0xFF667eea),
+                );
+              },
+            ),
           ),
         ),
         const SizedBox(height: 20),

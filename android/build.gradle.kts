@@ -1,7 +1,28 @@
 allprojects {
     repositories {
+        maven { url = uri("https://maven.faceunity.com/repository/maven-public/") }
         google()
         mavenCentral()
+    }
+}
+
+subprojects {
+    afterEvaluate {
+        if (project.hasProperty("android")) {
+            project.extensions.findByType(com.android.build.gradle.BaseExtension::class.java)?.apply {
+                if (project.name != "app") {
+                    compileOptions {
+                        sourceCompatibility = JavaVersion.VERSION_17
+                        targetCompatibility = JavaVersion.VERSION_17
+                    }
+                }
+            }
+        }
+        tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+            compilerOptions {
+                jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+            }
+        }
     }
 }
 

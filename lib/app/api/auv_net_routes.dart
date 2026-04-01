@@ -907,7 +907,7 @@ abstract class AuvNetRoutes {
   /// 返回数据: 应用配置信息,包含签名密钥等
   /// 说明: 获取应用配置,需要先调用此接口获取签名key
   /// 重要: 返回数据中的 ok 字段作为签名密钥使用
-  static const String appConfig = '/app/config';
+  static const String appConfig = '/system/app/getConfig';
 
   /// 客户端获取aiHelp菜单
   /// 请求方式: POST
