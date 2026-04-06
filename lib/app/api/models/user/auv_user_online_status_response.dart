@@ -13,7 +13,7 @@ class AuvUserOnlineStatusResponse {
   /// 是否在线，0.离线，1.在线，2.忙线
   final int? isOnline;
 
-  /// 是否在屏幕中，0.否，1.是
+  /// note 此字段是怎么定义的 来源是什么？  是否在屏幕中，0.否，1.是
   final int? inScreen;
 
   AuvUserOnlineStatusResponse({

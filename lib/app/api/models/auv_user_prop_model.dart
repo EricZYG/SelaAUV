@@ -20,13 +20,51 @@ enum AuvPropType {
 }
 
 /// 用户道具模型（我的背包）
+///
+/// 对应接口: /user/prop/getUserPropVo
+///
+/// 实际API返回示例:
+/// ```json
+/// {
+///   "userId": 10000389,
+///   "propType": 1,
+///   "propValue": 500000,
+///   "propNum": 1,
+///   "name": null,
+///   "icon": null,
+///   "animEffectUrl": null
+/// }
+/// ```
+///
+/// 字段说明:
+/// - userId: 用户id
+/// - propType: 道具类型，1.视频卡，2.钻石加成卡，3.礼物卡，4.聊天卡，5.匹配卡，6.头像框
+/// - propValue: 视频卡时长（毫秒数）/钻石加成/礼物id
+/// - propNum: 道具数量
+/// - name: 礼物卡 的 礼物名称
+/// - icon: 礼物卡 的礼物图标
+/// - animEffectUrl: 礼物卡 的礼物特效
 class AuvUserPropModel {
+  /// 用户id
   final int userId;
+
+  /// 道具类型
+  /// 1.视频卡，2.钻石加成卡，3.礼物卡，4.聊天卡，5.匹配卡，6.头像框
   final AuvPropType propType;
+
+  /// 视频卡时长（毫秒数）/钻石加成/礼物id
   final int propValue;
+
+  /// 道具数量
   final int propNum;
+
+  /// 礼物卡 的 礼物名称
   final String? name;
+
+  /// 礼物卡 的礼物图标
   final String? icon;
+
+  /// 礼物卡 的礼物特效
   final String? animEffectUrl;
 
   AuvUserPropModel({

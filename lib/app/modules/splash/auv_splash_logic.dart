@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:slea_auv/app/services/auv_storage_service.dart';
 import 'package:slea_auv/app/services/auv_api_service.dart';
+import 'package:slea_auv/app/services/auv_translate_service.dart';
 import 'package:slea_auv/app/api/services/auv_system_service.dart';
 import 'package:slea_auv/app/routes/auv_routes.dart';
 import 'package:slea_auv/app/utils/auv_logger.dart';
@@ -35,6 +36,11 @@ class AuvSplashLogic extends GetxController {
       statusText.value = 'Loading config...';
       await _fetchAppConfig();
 
+      // Step 2.5: Load translations (non-blocking, runs in parallel if possible)
+      AuvLogger.info('Step 2.5: Loading translations...', tag: 'SPLASH');
+      statusText.value = 'Loading translations...';
+      AuvTranslateService.to.load();
+
       // Step 3: Check login status and navigate
       AuvLogger.info('Step 3: Checking login status', tag: 'SPLASH');
       statusText.value = 'Checking...';
@@ -58,12 +64,6 @@ class AuvSplashLogic extends GetxController {
         AuvLogger.success('Got app config, sign key length: ${signKey.length}', tag: 'SPLASH');
         _apiService.setSignKey(signKey);
         AuvLogger.debug('Sign key set in API service', tag: 'SPLASH');
-        
-        // Check maintenance status
-        if (result.data!.maintenance == true) {
-          AuvLogger.warning('App is under maintenance: ${result.data!.maintenanceMsg}', tag: 'SPLASH');
-          // Could show maintenance dialog here
-        }
       } else {
         AuvLogger.warning('Failed to get app config or OK parameter is null', tag: 'SPLASH');
         AuvLogger.warning('Message: ${result.message}', tag: 'SPLASH');

@@ -4,6 +4,54 @@ library;
 import 'auv_product_pay_channel_response.dart';
 import 'auv_product_coupon_response.dart';
 
+/// 分次订单模型
+/// 【遗漏】
+class AuvProductSplitResponse {
+  /// 分次天数
+  final int? splitDay;
+
+  /// 钻石数
+  final int? diamonds;
+
+  /// 赠送钻石数
+  final int? bonus;
+
+  /// VIP天数
+  final int? vipDays;
+
+  /// 视频卡数量
+  final int? callCardNum;
+
+  /// 匹配卡数量
+  final int? matchCardNum;
+
+  /// 聊天卡数量
+  final int? chatCardNum;
+
+  AuvProductSplitResponse({
+    this.splitDay,
+    this.diamonds,
+    this.bonus,
+    this.vipDays,
+    this.callCardNum,
+    this.matchCardNum,
+    this.chatCardNum,
+  });
+
+  factory AuvProductSplitResponse.fromJson(Map<String, dynamic>? json) {
+    if (json == null) return AuvProductSplitResponse();
+    return AuvProductSplitResponse(
+      splitDay: json['splitDay'],
+      diamonds: json['diamonds'],
+      bonus: json['bonus'],
+      vipDays: json['vipDays'],
+      callCardNum: json['callCardNum'],
+      matchCardNum: json['matchCardNum'],
+      chatCardNum: json['chatCardNum'],
+    );
+  }
+}
+
 class AuvProductWithCouponResponse {
   /// 商品id
   final int? productId;
@@ -42,6 +90,7 @@ class AuvProductWithCouponResponse {
   /// 1.首充折扣
   /// 2.单次折扣
   /// 3.限时折扣
+  /// 4.活动折扣
   final int? discountType;
 
   /// 折扣（10表示优惠10%）
@@ -65,6 +114,9 @@ class AuvProductWithCouponResponse {
   /// 优惠券列表
   final List<AuvProductCouponResponse>? coupons;
 
+  /// 【遗漏】分次订单列表
+  final List<AuvProductSplitResponse>? splits;
+
   AuvProductWithCouponResponse({
     this.productId,
     this.productCode,
@@ -84,6 +136,7 @@ class AuvProductWithCouponResponse {
     this.currencyCode,
     this.ppp,
     this.coupons,
+    this.splits,
   });
 
   factory AuvProductWithCouponResponse.fromJson(Map<String, dynamic>? json) {
@@ -111,6 +164,9 @@ class AuvProductWithCouponResponse {
       coupons: (json['coupons'] as List<dynamic>?)
           ?.map((e) => AuvProductCouponResponse.fromJson(e))
           .toList(),
+      splits: (json['splits'] as List<dynamic>?)
+          ?.map((e) => AuvProductSplitResponse.fromJson(e))
+          .toList(),
     );
   }
 
@@ -124,4 +180,7 @@ class AuvProductWithCouponResponse {
 
   /// 是否有优惠券
   bool get hasCoupons => coupons != null && coupons!.isNotEmpty;
+
+  /// 是否有分次订单
+  bool get hasSplits => splits != null && splits!.isNotEmpty;
 }

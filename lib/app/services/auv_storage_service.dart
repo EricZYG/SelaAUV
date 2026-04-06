@@ -74,4 +74,12 @@ class AuvStorageService extends GetxService {
     await _box.remove('${AuvConfig.userInfoKey}_name');
     await _box.remove('${AuvConfig.userInfoKey}_userId');
   }
+
+  // ========== 通用读写方法（供其他Service使用）==========
+
+  T? read<T>(String key) => _box.read<T>(key);
+
+  Future<void> write(String key, dynamic value) => _box.write(key, value);
+
+  Future<void> remove(String key) => _box.remove(key);
 }

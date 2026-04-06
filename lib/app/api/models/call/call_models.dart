@@ -28,3 +28,4 @@ export 'auv_hangup_config_response.dart';
 export 'auv_hangup_record_request.dart';
 export 'auv_hangup_record_response.dart';
 export 'auv_hangup_record_list_data_response.dart';
+export 'auv_rate_call_request.dart';

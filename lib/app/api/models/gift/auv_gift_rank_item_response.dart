@@ -1,20 +1,10 @@
 /// 送礼榜单项模型
 ///
 /// 获取送礼榜单接口返回的数据
-///
-/// 字段说明:
-/// - gid: 礼物ID
-/// - senderId: 发送方ID
-/// - receiverId: 接收方ID
-/// - quantity: 礼物数量
-/// - diamonds: 礼物价值钻石数（小数点后两位）
-/// - time: 送礼时间
-/// - senderNickname: 发送方昵称
-/// - receiverNickname: 接收方昵称
-/// - senderPortrait: 发送方头像
-/// - receiverPortrait: 接收方头像
-/// - icon: 礼物图标
 class AuvGiftRankItemResponse {
+  /// 【遗漏】送礼记录ID
+  final int? recordId;
+
   /// 礼物ID
   final int? gid;
 
@@ -28,27 +18,28 @@ class AuvGiftRankItemResponse {
   final int? quantity;
 
   /// 礼物价值钻石数（小数点后两位）
-  final double? diamonds;
+  final int? diamonds;
 
   /// 送礼时间
   final int? time;
 
-  /// 发送方昵称
+  /// 【遗漏】发送方昵称
   final String? senderNickname;
 
-  /// 接收方昵称
+  /// 【遗漏】接收方昵称
   final String? receiverNickname;
 
-  /// 发送方头像
+  /// 【遗漏】发送方头像
   final String? senderPortrait;
 
-  /// 接收方头像
+  /// 【遗漏】接收方头像
   final String? receiverPortrait;
 
   /// 礼物图标
   final String? icon;
 
   AuvGiftRankItemResponse({
+    this.recordId,
     this.gid,
     this.senderId,
     this.receiverId,
@@ -65,11 +56,12 @@ class AuvGiftRankItemResponse {
   factory AuvGiftRankItemResponse.fromJson(Map<String, dynamic>? json) {
     if (json == null) return AuvGiftRankItemResponse();
     return AuvGiftRankItemResponse(
+      recordId: json['recordId'],
       gid: json['gid'],
       senderId: json['senderId'],
       receiverId: json['receiverId'],
       quantity: json['quantity'],
-      diamonds: (json['diamonds'] as num?)?.toDouble(),
+      diamonds: json['diamonds'],
       time: json['time'],
       senderNickname: json['senderNickname'],
       receiverNickname: json['receiverNickname'],
@@ -77,5 +69,11 @@ class AuvGiftRankItemResponse {
       receiverPortrait: json['receiverPortrait'],
       icon: json['icon'],
     );
+  }
+
+  /// 获取送礼时间
+  DateTime? get giftTime {
+    if (time == null || time == 0) return null;
+    return DateTime.fromMillisecondsSinceEpoch(time!);
   }
 }

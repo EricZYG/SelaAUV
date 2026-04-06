@@ -14,7 +14,7 @@ class AuvSendMsgRequest {
   final String urlOrContent;
   /// 客户端自己用的数据
   final String? jsonData;
-  /// 额外数据
+  /// note 额外数据 包含什么 格式是什么 ？
   final String? extraData;
 
   AuvSendMsgRequest({

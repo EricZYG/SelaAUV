@@ -66,12 +66,74 @@ abstract class AuvNetRoutes {
   static const String guildLogin = '/manager/login/guild';
 
   // ==================== 用户相关 ====================
-  
+
+  /// 随机获取头像列表
+  /// 请求方式: GET
+  /// 请求参数:
+  ///   - size: 头像个数（必填）
+  /// 返回数据:
+  ///   - userId: 用户id
+  ///   - portrait: 头像
+  /// 说明: 随机获取指定数量的用户头像列表
+  static const String getPortraits = '/user/user/getPortraits';
+
   /// 用户端-获取我的页面信息
   /// 请求方式: GET
   /// 请求参数: 无
   /// 说明: 获取当前登录用户的详细信息（我的页面）
   static const String getUserDetail = '/user/user/getUserDetail';
+
+  /// 检查用户是否缺少某些数据
+  /// 请求方式: GET
+  /// 请求参数: 无
+  /// 返回数据:
+  ///   - userId: 用户ID
+  ///   - hasSignature: 是否有签名（0.否，1.是）
+  ///   - hasTag: 是否有标签（0.否，1.是）
+  /// 说明: 检查用户是否填写了必要的个人资料
+  static const String checkUserDetail = '/user/user/checkUserDetail';
+
+  /// 用户端-获取我的背包
+  /// 请求方式: GET
+  /// 请求参数: 无
+  /// 返回数据:
+  ///   - userId: 用户id
+  ///   - propType: 道具类型，1.视频卡，2.钻石加成卡，3.礼物卡，4.聊天卡，5.匹配卡，6.头像框
+  ///   - propValue: 视频卡时长（毫秒数）/钻石加成/礼物id
+  ///   - propNum: 道具数量
+  ///   - name: 礼物卡 的 礼物名称
+  ///   - icon: 礼物卡 的礼物图标
+  ///   - animEffectUrl: 礼物卡 的礼物特效
+  /// 说明: 获取当前用户的道具背包列表
+  static const String getUserPropVo = '/user/prop/getUserPropVo';
+
+  /// 获取多账号用户
+  /// 请求方式: GET
+  /// 请求参数: 无
+  /// 返回数据:
+  ///   - userId: 用户ID
+  ///   - username: 用于显示的UID
+  ///   - nickname: 用户昵称
+  ///   - portrait: 头像
+  ///   - email: 邮箱
+  ///   - sex: 性别，1.男，2.女
+  ///   - oauthTypes: 登录方式列表，0.谷歌登录，4.账号密码登录
+  /// 说明: 存在多个账号时返回余额最多和最新登录的一个账号，与游客登录逻辑一致
+  static const String getMultiUser = '/user/user/getMultiUser';
+
+  /// 获取用户钻石排行
+  /// 请求方式: GET
+  /// 请求参数:
+  ///   - timeLevel: 排行榜类型，1.当日，2.本周
+  /// 返回数据:
+  ///   - userId: 用户ID
+  ///   - username: 用于显示的UID
+  ///   - nickname: 用户昵称
+  ///   - portrait: 头像
+  ///   - vipFlag: 是否VIP
+  ///   - level: 等级值
+  ///   - diamonds: 钻石数，小数点后两位
+  static const String getDiamondRanking = '/user/user/getDiamondRanking';
 
   /// 用户信息
   /// 请求方式: GET
@@ -79,22 +141,267 @@ abstract class AuvNetRoutes {
   /// 需要认证: 是
   static const String userInfo = '/user/info';
 
+  /// 不登录获取R信息
+  /// 请求方式: GET
+  /// 参数: 无
+  /// 返回数据:
+  ///   - rFlag: 是否审核模式，0.否，1.是
+  ///   - aFlag: 未知
+  ///   - tFlag: 未知
+  ///   - nickname: 用户昵称
+  ///   - turl: h5地址
+  /// 说明: 不登录状态下获取用户审核模式等信息
+  /// 需要认证: 否
+  static const String getRInfo = '/user/user/getRInfo';
+
+  /// 获取邀请奖励配置列表
+  /// 请求方式: GET
+  /// 参数: 无
+  /// 返回数据:
+  ///   - countryCode: 国家编码
+  ///   - countryName: 国家名称
+  ///   - countryPath: 国旗地址
+  ///   - femaleAuthCoins: 被邀请女用户认证奖励（金币）
+  ///   - femaleIncomeCoins: 被邀请女用户收入达标奖励（金币）
+  /// 说明: 获取邀请奖励的配置列表
+  /// 需要认证: 否
+  static const String queryInviteRewardConfig = '/user/user/queryInviteRewardConfig';
+
+  /// 根据邀请码查询用户id
+  /// 请求方式: GET
+  /// 参数:
+  ///   - inviteCode: 邀请码（必填）
+  /// 返回数据:
+  ///   - userId: 邀请人用户id
+  ///   - inviteCode: 邀请码
+  /// 说明: 根据邀请码查询对应的用户ID
+  /// 需要认证: 否
+  static const String getUserIdByInviteCode = '/user/user/getUserIdByInviteCode';
+
+  /// 获取昵称头像审核状态
+  /// 请求方式: GET
+  /// 参数: 无
+  /// 返回数据:
+  ///   - portraitStatus: 头像审核状态，0.待审核，1.审核通过，2.审核失败
+  ///   - nicknameStatus: 昵称审核状态，0.待审核，1.审核通过，2.审核失败
+  ///   - portraitUpdatedAt: 头像审核变更时间
+  ///   - nicknameUpdatedAt: 昵称审核变更时间
+  /// 说明: 获取用户昵称和头像的审核状态
+  /// 需要认证: 是
+  static const String getNicknamePortraitStatus = '/user/user/getNicknamePortraitStatus';
+
+  /// 获取每日签到相关数据
+  /// 请求方式: GET
+  /// 参数: 无
+  /// 返回数据:
+  ///   - signDay: 此刻待签到的天数（=7时表示前6天全签到了；=0时表示7天全部签了）
+  ///   - signFlag: 此刻是否需要签到（true需要，false不需要）
+  ///   - nexTimes: 下一次倒计时时间
+  ///   - rewardList: 奖励列表
+  /// 说明: 获取每日签到的相关信息和奖励列表
+  /// 需要认证: 是
+  static const String getSignInVo = '/user/sign/getSignInVo';
+
+  /// 签到领奖励
+  /// 请求方式: POST
+  /// 参数:
+  ///   - signDay: 领取签到的对应天数（路径参数，必填）
+  ///   - dateStr: 测试日期字符串（可选，格式如20231123）
+  /// 请求头:
+  ///   - s-time: 请求时间戳
+  ///   - s-sign: 请求签名
+  /// 返回数据:
+  ///   - id: 奖品id
+  ///   - name: 奖品名称
+  ///   - icon: 奖品图标
+  ///   - countryCode: 国家编码
+  ///   - rewardType: 签到奖品类型（1.钻石，2.视频卡，3.匹配卡，4.聊天卡）
+  ///   - rewardValue: 奖品数量
+  ///   - signDay: 签到天数
+  /// 说明: 签到领取对应天数的奖励
+  /// 需要认证: 是
+  static const String signIn = '/user/sign/signIn';
+
   /// 更新用户信息
   /// 请求方式: POST
   /// 说明: 更新用户资料
   /// 需要认证: 是
   static const String updateUserInfo = '/user/update';
 
-  /// 签到领奖励
+
+  /// VIP特权每日领取
   /// 请求方式: POST
-  /// 请求参数: signDay (签到天数), dateStr (日期字符串,可选,用于测试)
-  /// 返回数据: 签到奖励信息
-  /// 说明: 连续签到可获得不同奖励
-  /// 需要签名: 是
-  static const String signIn = '/user/sign/signIn';
+  /// 参数: 无
+  /// 返回数据: null
+  /// 说明: VIP用户每日领取特权奖励
+  /// 需要认证: 是
+  static const String vipSignIn = '/user/sign/vipSignIn';
 
   // ==================== 充值相关 ====================
-  
+
+  /// 用户端-获取钻石/金币明细
+  /// 请求方式: POST
+  /// body参数:
+  ///   - pageNum: 第几页（必填）
+  ///   - pageSize: 每页几条（必填）
+  ///   - condition: 查询条件（必填）
+  ///     - action: 变动类型，1.收入，2.支出
+  ///     - startTimes: 开始时间毫秒时间戳
+  ///     - endTimes: 结束时间毫秒时间戳
+  ///     - isGame: 是否查看游戏明细
+  /// 返回数据:
+  ///   - total: 总记录数
+  ///   - list: 明细列表
+  ///     - userId: 用户id
+  ///     - recordType: 消费代码
+  ///     - recordTypeStr: 类型描述
+  ///     - action: 变动类型，1.收入，2.支出
+  ///     - createTimes: 时间戳
+  ///     - value: 钻石数or金币数（负数表示支出）
+  ///   - pageNum: 当前页码
+  ///   - pageSize: 每页条数
+  ///   - pages: 总页数
+  ///   - hasNextPage: 是否有下一页
+  ///   - isFirstPage: 是否第一页
+  ///   - isLastPage: 是否最后一页
+  /// 说明: 用户端查询钻石/金币明细
+  static const String getUserBalanceRecords = '/user/balance/getUserBalanceRecords';
+
+  /// 设置用户推送token
+  /// 请求方式: POST
+  /// body参数:
+  ///   - firebaseToken: 推送token（必填）
+  /// 返回数据: 无
+  /// 说明: 设置用户的Firebase推送token，用于接收推送通知
+  static const String updateFirebaseToken = '/user/user/updateFirebaseToken';
+
+  /// 设置用户广告归因
+  /// 请求方式: POST
+  /// body参数:
+  ///   - network: 归因渠道名称（必填）
+  ///   - campaign: 推广活动名称（可选）
+  ///   - clickLabel: 安装被标记的点击标签（可选）
+  ///   - trackerToken: 设备当前归因跟踪链接的跟踪码（可选）
+  ///   - trackerName: 设备当前归因跟踪链接的名称（可选）
+  ///   - adgroup: 设备当前归因广告组的名称（可选）
+  ///   - creative: 设备当前归因素材的名称（可选）
+  ///   - adid: 设备的唯一 Adjust ID（可选）
+  ///   - costType: 推广活动定价模型，如 cpi（可选）
+  ///   - costAmount: 安装成本（可选）
+  ///   - costCurrency: 成本相关的货币代码，ISO 4217标准，3字符（可选）
+  /// 返回数据: 无
+  /// 说明: 设置用户的广告归因信息，用于渠道统计
+  static const String updateAdFlag = '/user/user/updateAdFlag';
+
+  /// 注销账号
+  /// 请求方式: POST
+  /// body参数: 无
+  /// 返回数据: 无
+  /// 说明: 注销当前登录用户账号，注销后不可恢复
+  static const String deleteUser = '/user/user/deleteUser';
+
+  /// 根据账号密码注销账号
+  /// 请求方式: POST
+  /// body参数:
+  ///   - username: 用户名（必填）
+  ///   - password: 明文密码（必填）
+  /// 返回数据: 无
+  /// 说明: 根据用户名和密码注销账号，注销后不可恢复
+  static const String deleteUserByPassword = '/user/logoff/deleteUserByPassword';
+
+  /// 更新App分数
+  /// 请求方式: POST
+  /// body参数:
+  ///   - recordId: 记录id（必填）
+  ///   - score: 分数（必填）
+  ///   - remark: 备注（可选）
+  /// 返回数据: 无
+  /// 说明: 更新用户对App的评价分数
+  static const String updateAppRateScore = '/user/user/updateAppRateScore';
+
+  /// 是否有过填写邀请码
+  /// 请求方式: POST
+  /// body参数: 无
+  /// 返回数据:
+  ///   - true: 有邀请记录
+  ///   - false: 没有邀请记录
+  /// 说明: 检查用户是否填写过邀请码
+  static const String isHasInviteRecord = '/user/user/isHasInviteRecord';
+
+  /// 获取邀请奖励记录列表
+  /// 请求方式: GET
+  /// body参数: 无
+  /// 返回数据:
+  ///   - inviteeUserId: 被邀请用户ID
+  ///   - nickname: 被邀请用户昵称
+  ///   - portrait: 被邀请用户头像
+  ///   - createdAt: 创建时间
+  ///   - type: 奖励类型（1注册奖励 2充值奖励）
+  ///   - reward: 奖励钻石数（实际需要除以100）
+  /// 说明: 获取用户的邀请奖励记录列表
+  static const String getInviteUserVoList = '/user/user/getInviteUserVoList';
+
+  /// 邀请者获取邀请信息
+  /// 请求方式: GET
+  /// body参数: 无
+  /// 返回数据:
+  ///   - inviteCode: 邀请码
+  ///   - awardIncome: 总收入
+  ///   - inviteAward: 注册邀请奖励
+  ///   - rechargeAward: 充值邀请奖励
+  ///   - shareUrl: 分享链接
+  ///   - inviteDailyCount: 每日邀请最大人数
+  ///   - inviteCount: 当天已邀请人数
+  /// 说明: 获取当前用户的邀请信息
+  static const String getInviteInfo = '/user/user/getInviteInfo';
+
+  /// 绑定邀请码
+  /// 请求方式: POST
+  /// url参数:
+  ///   - inviteCode: 邀请码（必填）
+  /// body参数: 无
+  /// 返回数据: 无
+  /// 说明: 用户绑定邀请码，成功后返回null
+  static const String bindInviteCode = '/user/user/bindInviteCode';
+
+  /// 获取邀请绑定记录
+  /// 请求方式: POST
+  /// body参数: 无
+  /// 返回数据:
+  ///   - createdAt: 注册时间戳
+  ///   - hasBindInviteCode: 是否绑定邀请码（true已绑定 false未绑定）
+  ///   - canBindInviteCode: 是否可以绑定邀请码（true可以 false不可以）
+  ///   - inviteCode: 邀请码
+  /// 说明: 获取当前用户的邀请绑定记录信息
+  static const String getInviteRecord = '/user/user/getInviteRecord';
+
+  /// 任务领取
+  /// 请求方式: POST
+  /// body参数:
+  ///   - taskUnique: 任务唯一标识（必填）
+  ///   - round: 轮次（可选），默认1
+  /// 返回数据:
+  ///   - rewardJson: 奖励JSON列表
+  ///   - rewardVo: 奖励详情
+  ///   - taskUnique: 任务唯一标识
+  /// 说明: 领取任务奖励
+  static const String userDraw = '/user/task/userDraw';
+
+  /// 举报/反馈
+  /// 请求方式: POST
+  /// body参数:
+  ///   - type: 举报类型，1.反馈，2.举报，3.官方回复（必填）
+  ///   - anchorUserId: 主播的用户ID（可选）
+  ///   - linkId: 关联id，如举报通话则传入频道id（可选）
+  ///   - topicType: 举报主题（必填）
+  ///     * 1.广告骚扰，2.对话懒散，3.主播不露脸，4.攻击谩骂
+  ///     * 5.虚假信息，6.诈骗，7.政治，8.淫秽色情，9.其他，10.虐待儿童
+  ///   - content: 内容（必填）
+  ///   - path: 图片地址，多个图片用逗号分开（可选）
+  /// 返回数据: 无
+  /// 说明: 提交用户举报或反馈
+  static const String feedbackSave = '/user/feedback/save';
+
   /// 礼物列表
   /// 请求方式: GET
   /// 请求参数: category_id (分类ID,可选), page (页码), page_size (每页数量)
@@ -909,6 +1216,13 @@ abstract class AuvNetRoutes {
   /// 重要: 返回数据中的 ok 字段作为签名密钥使用
   static const String appConfig = '/system/app/getConfig';
 
+  /// 获取翻译文案V2
+  /// 请求方式: GET
+  /// 参数: 无
+  /// 返回数据: { version: 时间戳版本号, url: 翻译JSON文件地址 }
+  /// 说明: 获取翻译文案版本号和下载地址，可登录可不登录
+  static const String getTranslatesV2 = '/system/app/getTranslatesV2';
+
   /// 客户端获取aiHelp菜单
   /// 请求方式: POST
   /// 参数:
@@ -1031,6 +1345,16 @@ abstract class AuvNetRoutes {
   /// 返回数据: 无
   /// 说明: 通话结束后给主播打标签
   static const String tagCall = '/call/call/tagCall';
+
+  /// 通话结束后给主播打分
+  /// 请求方式: POST
+  /// Body参数:
+  ///   - channelId: 频道id（必填）
+  ///   - rateScore: 分数（必填）
+  ///   - rateTypes: 打分类型列表（必填）
+  /// 返回数据: 无
+  /// 说明: 通话结束后给主播打分
+  static const String rateCall = '/call/call/rateCall';
 
   /// 上报通话质量
   /// 请求方式: POST

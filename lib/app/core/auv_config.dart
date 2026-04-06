@@ -17,6 +17,10 @@ class AuvConfig {
   static const String userInfoKey = 'user_info';
   static const String isVisitorKey = 'is_visitor';
 
+  // 翻译文案存储 Keys
+  static const String translateDataKey = 'translate_data';
+  static const String translateVersionKey = 'translate_version';
+
 
   // curl --request GET \
   // --url 'https://testapi.selalive.com/user/user/getUserExpand?userId=10163057' \

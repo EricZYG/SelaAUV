@@ -150,7 +150,7 @@ class AuvTaskItem {
   final String taskUnique;              // 任务唯一标识
   final int sortWeight;                 // 排序权重
   final String icon;                    // 任务图标
-  final TaskCompleteConfig completeConfig; // 完成进度配置
+    final TaskCompleteConfig completeConfig; // 完成进度配置
 
   AuvTaskItem({
     required this.taskId,

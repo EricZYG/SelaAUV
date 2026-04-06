@@ -15,25 +15,63 @@ class AuvSystemService extends AuvBaseService {
     return service;
   }
 
-  /// 获取应用配置
+  /// 获取应用配置 - 完整版（用户端）
+  /// 
+  /// GET /system/app/getConfig
+  /// 
+  /// 可登录可不登录，登录返回数据可能有变化
+  /// 
+  /// 返回完整的应用配置数据，包含礼包、道具价格、隐私聊天价格等全部字段
   /// 
   /// 示例:
   /// ```dart
   /// final result = await systemService.getAppConfig();
   /// if (result.success && result.data?.ok != null) {
+  ///   // 声网appId
+  ///   print('agoraAppId: ${result.data!.agoraAppId}');
+  ///   // 新手礼包
+  ///   final reward = result.data!.registerReward;
+  ///   print('videoCard: ${reward?.callCardNum}');
+  ///   print('diamonds: ${reward?.diamonds}');
   ///   // 设置签名密钥
   ///   setSignKey(result.data!.ok!);
   /// }
   /// ```
-  Future<AuvBaseResponse<AuvAppConfigResponse>> getAppConfig() async {
+  Future<AuvBaseResponse<AuvAppConfigUserResponse>> getAppConfig() async {
     try {
       final response = await get(AuvNetRoutes.appConfig);
-      return handleResponse<AuvAppConfigResponse>(
+      return handleResponse<AuvAppConfigUserResponse>(
         response.data,
-        (data) => AuvAppConfigResponse.fromJson(data),
+        (data) => AuvAppConfigUserResponse.fromJson(data),
       );
     } catch (e) {
-      return handleError<AuvAppConfigResponse>(e);
+      return handleError<AuvAppConfigUserResponse>(e);
+    }
+  }
+
+  /// 获取翻译文案V2
+  /// 
+  /// GET /system/app/getTranslatesV2
+  /// 
+  /// 可登录可不登录，返回翻译文案版本号和JSON文件URL
+  /// 
+  /// 示例:
+  /// ```dart
+  /// final result = await systemService.getTranslatesV2();
+  /// if (result.success && result.data != null) {
+  ///   print('version: ${result.data!.version}');
+  ///   print('url: ${result.data!.url}');
+  /// }
+  /// ```
+  Future<AuvBaseResponse<AuvTranslatesV2Response>> getTranslatesV2() async {
+    try {
+      final response = await get(AuvNetRoutes.getTranslatesV2);
+      return handleResponse<AuvTranslatesV2Response>(
+        response.data,
+        (data) => AuvTranslatesV2Response.fromJson(data),
+      );
+    } catch (e) {
+      return handleError<AuvTranslatesV2Response>(e);
     }
   }
 

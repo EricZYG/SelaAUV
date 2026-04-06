@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../auv_net_routes.dart';
 import '../models/auv_models.dart';
 import '../models/call/auv_call_channel_response.dart';
+import '../models/call/auv_rate_call_request.dart';
 import '../../services/auv_api_service.dart';
 import 'auv_base_service.dart';
 
@@ -204,9 +205,9 @@ class AuvCallService extends AuvBaseService {
     required int endType,
     int? clientEndAt,
     int? clientDuration,
-    int? outDuration,
-    int? outCount,
-    int? requestCount,
+    int? outDuration,///note 不在视频范围内的时长，毫秒数
+    int? outCount,///note 不在视频范围内的次数
+    int? requestCount, ///note 请求次数
     int? matchMode,
   }) async {
     try {
@@ -494,9 +495,9 @@ class AuvCallService extends AuvBaseService {
   /// 【注意】此接口无需签名验证
   Future<AuvBaseResponse<void>> reportCall({
     required int channelId,
-    required int rxQuality,
+    required int rxQuality,///note 质量？
     required int time,
-    required int txQuality,
+    required int txQuality, ///note 质量？
     required int isRemote,
   }) async {
     try {
@@ -851,6 +852,39 @@ class AuvCallService extends AuvBaseService {
       final response = await post(
         AuvNetRoutes.uploadHangupRecord,
         data: {'hangupType': hangupType},
+        needSign: false,
+      );
+      return handleVoidResponse(response.data);
+    } catch (e) {
+      return handleError<void>(e);
+    }
+  }
+
+  /// 通话结束后给主播打分
+  ///
+  /// 通话结束后对主播进行评分
+  ///
+  /// 【请求参数】
+  /// [channelId] 频道ID（必填）
+  /// [rateScore] 评分分数（必填）
+  /// [rateTypes] 打分类型列表（必填）
+  ///
+  /// 【返回值】无
+  ///
+  /// 【注意】此接口无需签名验证
+  Future<AuvBaseResponse<void>> rateCall({
+    required int channelId,
+    required int rateScore,
+    required List<int> rateTypes,
+  }) async {
+    try {
+      final response = await post(
+        AuvNetRoutes.rateCall,
+        data: AuvRateCallRequest(
+          channelId: channelId,
+          rateScore: rateScore,
+          rateTypes: rateTypes,
+        ).toJson(),
         needSign: false,
       );
       return handleVoidResponse(response.data);

@@ -1,129 +1,221 @@
-# API 测试脚本
+# API 测试报文记录
 
-SleaAUV项目API接口测试脚本，按模块组织，每个接口独立文件夹。
+> 本目录包含所有 API 接口的实际响应报文
+>
+> 执行时间: 2026-04-06
+>
+> 测试环境: testapi.selalive.com
 
-## 目录结构
+## 测试摘要
+
+- **成功**: 65 个接口
+- **失败**: 17 个接口
+
+## 文件夹结构
 
 ```
-lib/scripts/api_test/
+api_test/
 ├── README.md                    # 本文档
-├── common/                      # 公共模块
-│   ├── config.dart              # API配置、调试头
-│   └── sign_util.dart           # 签名工具
-├── auth/                        # 认证模块
-│   ├── user_login_guest/        # 游客登录
-│   ├── user_login_phone/        # 手机登录
-│   ├── user_login_google/       # 谷歌登录
-│   └── user_login_apple/         # 苹果登录
-├── user/                        # 用户模块
-│   ├── user_sign_signIn/        # 签到领奖励
-│   ├── user_user_getUserDetail/ # 获取用户详情
+├── api_test_results_*.json      # 原始测试数据
+├── user/                       # 用户相关接口
+│   ├── user_user_getUserDetail_test.dart
+│   ├── user_user_getUserSimple_test.dart
 │   └── ...
-├── payment/                     # 支付模块
-│   ├── p_order_createOrder/     # 创建订单（需签名）
-│   ├── p_product_getProducts/   # 获取商品列表
+├── system/                     # 系统相关接口
+│   ├── system_app_getConfig_test.dart
 │   └── ...
-├── gift/                        # 送礼模块
-│   ├── user_gift_sendReal/      # 赠送真实礼物（需签名）
-│   └── user_gift_sendLucky/     # 赠送幸运礼物（需签名）
-├── anchor/                      # 主播模块
-├── msg/                         # 消息模块
-├── call/                        # 通话模块
-├── moment/                      # 动态模块
-├── system/                      # 系统模块
-│   └── system_app_getConfig/   # 获取应用配置（获取签名密钥）
-├── charge/                      # 充值模块
-└── match/                       # 匹配模块
+├── gift/                       # 礼物相关接口
+│   ├── gift_list_test.dart
+│   └── ...
+├── product/                    # 商品/支付相关接口
+│   ├── p_product_getProducts_test.dart
+│   └── ...
+└── call/                       # 通话相关接口
+    ├── call_call_getCallRecordVoList_test.dart
+    └── ...
 ```
 
-## 使用方法
+## 用户模块
 
-### 1. 安装依赖
+| 接口路径 | 文件 | 状态 |
+|---------|------|------|
+| /user/user/getUserDetail | [user_user_getUserDetail_test.dart](user/user_user_getUserDetail_test.dart) | ✅ |
+| /user/prop/getUserPropVo | [user_prop_getUserPropVo_test.dart](user/user_prop_getUserPropVo_test.dart) | ✅ |
+| /user/user/getUserUpdateDetailVo | [user_user_getUserUpdateDetailVo_test.dart](user/user_user_getUserUpdateDetailVo_test.dart) | ✅ |
+| /user/user/getUserSimple | [user_user_getUserSimple_test.dart](user/user_user_getUserSimple_test.dart) | ✅ |
+| /user/user/getRelationCount | [user_user_getRelationCount_test.dart](user/user_user_getRelationCount_test.dart) | ✅ |
+| /user/user/getUserSeeVo | [user_user_getUserSeeVo_test.dart](user/user_user_getUserSeeVo_test.dart) | ✅ |
+| /user/user/getUserDetail | [user_user_getUserDetail_test.dart](user/user_user_getUserDetail_test.dart) | ✅ |
+| /user/info | [user_info_test.dart](user/user_info_test.dart) | ❌ |
+| /user/level/getLevelInfoConfigs | [user_level_getLevelInfoConfigs_test.dart](user/user_level_getLevelInfoConfigs_test.dart) | ✅ |
+| /user/advance/getDialogDetail | [user_advance_getDialogDetail_test.dart](user/user_advance_getDialogDetail_test.dart) | ✅ |
+| /user/sticker/getCommonPackages | [user_sticker_getCommonPackages_test.dart](user/user_sticker_getCommonPackages_test.dart) | ✅ |
+| /user/user/updateFirebaseToken | [user_user_updateFirebaseToken_test.dart](user/user_user_updateFirebaseToken_test.dart) | ✅ |
+| /user/user/updateAdFlag | [user_user_updateAdFlag_test.dart](user/user_user_updateAdFlag_test.dart) | ✅ |
+| /user/user/deleteUser | [user_user_deleteUser_test.dart](user/user_user_deleteUser_test.dart) | ✅ |
+| /user/feedback/save | [user_feedback_save_test.dart](user/user_feedback_save_test.dart) | ✅ |
 
-```bash
-dart pub add dio crypto
-```
+### Balance（余额/明细）模块
 
-### 2. 修改配置
+| 接口路径 | 文件 | 状态 |
+|---------|------|------|
+| /user/balance/getUserBalanceRecords | [user_balance_getUserBalanceRecords_test.dart](user/user_balance_getUserBalanceRecords_test.dart) | ✅ |
 
-编辑 `common/config.dart` 中的调试配置：
+### 关注模块
 
-```dart
-class DebugConfig {
-  static const bool debugMode = true;
-  static const String deviceId = 'your_device_id';
-  static const String userAgent = 'your_user_agent';
-  static const String auth = 'your_auth_token';
-}
-```
+| 接口路径 | 文件 | 状态 |
+|---------|------|------|
+| /user/follow/getFollowCount | [user_follow_getFollowCount_test.dart](user/user_follow_getFollowCount_test.dart) | ✅ |
+| /user/follow/getFollowList | [user_follow_getFollowList_test.dart](user/user_follow_getFollowList_test.dart) | ✅ |
+| /user/follow/getFollowListV2 | [user_follow_getFollowListV2_test.dart](user/user_follow_getFollowListV2_test.dart) | ✅ |
 
-### 3. 运行测试
+### 黑名单模块
 
-```bash
-# 测试获取应用配置（先获取签名密钥）
-dart lib/scripts/api_test/system/system_app_getConfig/test.dart
+| 接口路径 | 文件 | 状态 |
+|---------|------|------|
+| /user/blacklist/getBlackList | [user_blacklist_getBlackList_test.dart](user/user_blacklist_getBlackList_test.dart) | ✅ |
 
-# 测试签到接口
-dart lib/scripts/api_test/user/user_sign_signIn/test.dart
+### 喜欢模块
 
-# 测试下单接口
-dart lib/scripts/api_test/payment/p_order_createOrder/test.dart
-```
+| 接口路径 | 文件 | 状态 |
+|---------|------|------|
+| /user/like/getLikeList | [user_like_getLikeList_test.dart](user/user_like_getLikeList_test.dart) | ✅ |
 
-## 需要签名的接口
+### 消息模块
 
-| 模块 | 接口 | 路径 | 说明 |
-|------|------|------|------|
-| 认证 | 游客登录 | `/user/login/guest` | 需签名 |
-| 认证 | 手机登录 | `/user/login/phone` | 需签名 |
-| 认证 | 谷歌登录 | `/user/login/google` | 需签名 |
-| 认证 | 苹果登录 | `/user/login/apple` | 需签名 |
-| 用户 | 签到领奖励 | `/user/sign/signIn` | 需签名 |
-| 支付 | 充值（下单） | `/p/order/createOrder` | 需签名 |
-| 送礼 | 赠送真实礼物 | `/user/gift/sendReal` | 需签名 |
-| 送礼 | 赠送幸运礼物 | `/user/gift/sendLucky` | 需签名 |
+| 接口路径 | 文件 | 状态 |
+|---------|------|------|
+| /user/msg/getMsgRecords | [user_msg_getMsgRecords_test.dart](user/user_msg_getMsgRecords_test.dart) | ✅ |
 
-## 签名规则
+### 动态模块
 
-1. 将请求参数按照参数名ASCII码从小到大排序
-2. 使用URL键值对格式拼接成字符串
-3. 在末尾拼接 `time` 和 `key`
-4. 对结果进行MD5运算，转小写得到sign
+| 接口路径 | 文件 | 状态 |
+|---------|------|------|
+| /user/anchorMoment/publish | [user_anchorMoment_publish_test.dart](user/user_anchorMoment_publish_test.dart) | ❌ |
+| /user/anchorMoment/getOneMoment | [user_anchorMoment_getOneMoment_test.dart](user/user_anchorMoment_getOneMoment_test.dart) | ✅ |
+| /user/anchorMoment/hasNewFollowMoment | [user_anchorMoment_hasNewFollowMoment_test.dart](user/user_anchorMoment_hasNewFollowMoment_test.dart) | ✅ |
+| /user/anchorMoment/anchorGetOtherMoment | [user_anchorMoment_anchorGetOtherMoment_test.dart](user/user_anchorMoment_anchorGetOtherMoment_test.dart) | ❌ |
+| /user/anchorMoment/userGetMoment | [user_anchorMoment_userGetMoment_test.dart](user/user_anchorMoment_userGetMoment_test.dart) | ❌ |
+| /user/anchorMoment/getComments | [user_anchorMoment_getComments_test.dart](user/user_anchorMoment_getComments_test.dart) | ❌ |
 
-## 测试流程
+### 心动等级模块
 
-1. **获取签名密钥**
-   ```bash
-   dart lib/scripts/api_test/system/system_app_getConfig/test.dart
-   ```
-   从输出中获取 `ok` 字段的值
+| 接口路径 | 文件 | 状态 |
+|---------|------|------|
+| /user/heartbeatLevel/getLevelInfoConfigs | [user_heartbeatLevel_getLevelInfoConfigs_test.dart](user/user_heartbeatLevel_getLevelInfoConfigs_test.dart) | ✅ |
+| /user/heartbeatLevel/getRuleList | [user_heartbeatLevel_getRuleList_test.dart](user/user_heartbeatLevel_getRuleList_test.dart) | ❌ |
+| /user/heartbeatLevel/getConfig | [user_heartbeatLevel_getConfig_test.dart](user/user_heartbeatLevel_getConfig_test.dart) | ✅ |
+| /user/heartbeatLevel/getFixHeartbeatAnchors | [user_heartbeatLevel_getFixHeartbeatAnchors_test.dart](user/user_heartbeatLevel_getFixHeartbeatAnchors_test.dart) | ✅ |
+| /user/heartbeatLevel/getHeartbeatList | [user_heartbeatLevel_getHeartbeatList_test.dart](user/user_heartbeatLevel_getHeartbeatList_test.dart) | ✅ |
+| /user/heartbeatLevel/batchGetHeartbeatValues | [user_heartbeatLevel_batchGetHeartbeatValues_test.dart](user/user_heartbeatLevel_batchGetHeartbeatValues_test.dart) | ❌ |
 
-2. **使用签名密钥测试其他接口**
-   将获取的密钥填入需要签名的接口测试脚本中
+### 礼物模块
 
-## 接口文档
+| 接口路径 | 文件 | 状态 |
+|---------|------|------|
+| /user/gift/getGiftList | [user_gift_getGiftList_test.dart](user/user_gift_getGiftList_test.dart) | ✅ |
+| /user/gift/getAllGifts | [user_gift_getAllGifts_test.dart](user/user_gift_getAllGifts_test.dart) | ✅ |
+| /user/gift/getOne | [user_gift_getOne_test.dart](user/user_gift_getOne_test.dart) | ✅ |
+| /user/gift/getActions | [user_gift_getActions_test.dart](user/user_gift_getActions_test.dart) | ✅ |
+| /user/gift/getGiftShows | [user_gift_getGiftShows_test.dart](user/user_gift_getGiftShows_test.dart) | ✅ |
+| /user/gift/getAnchorGiftShows | [user_gift_getAnchorGiftShows_test.dart](user/user_gift_getAnchorGiftShows_test.dart) | ✅ |
+| /user/gift/getGiftRank | [user_gift_getGiftRank_test.dart](user/user_gift_getGiftRank_test.dart) | ✅ |
+| /user/anchor/getLiveGiftShowFlag | [user_anchor_getLiveGiftShowFlag_test.dart](user/user_anchor_getLiveGiftShowFlag_test.dart) | ✅ |
+| /user/gift/getTrialReachGifts | [user_gift_getTrialReachGifts_test.dart](user/user_gift_getTrialReachGifts_test.dart) | ✅ |
+| /user/gift/getLuckyGifts | [user_gift_getLuckyGifts_test.dart](user/user_gift_getLuckyGifts_test.dart) | ✅ |
 
-每个接口文件夹包含：
-- `README.md` - 接口文档（请求参数、响应参数、示例）
-- `test.dart` - 可独立运行的测试脚本
+### 主播模块
 
-## 公共请求头
+| 接口路径 | 文件 | 状态 |
+|---------|------|------|
+| /anchor/list | [anchor_list_test.dart](user/anchor_list_test.dart) | ❌ |
+| /anchor/detail | [anchor_detail_test.dart](user/anchor_detail_test.dart) | ❌ |
 
-调试模式下会自动添加以下请求头：
+## 系统模块
 
-```
-Accept: */*
-Accept-Encoding: gzip, deflate, br
-Connection: keep-alive
-authorization: {token}
-content-type: application/json; charset=utf-8
-device-id: {deviceId}
-user-agent: {userAgent}
-user-language: zh
-```
+| 接口路径 | 文件 | 状态 |
+|---------|------|------|
+| /system/app/getConfig | [system_app_getConfig_test.dart](system/system_app_getConfig_test.dart) | ✅ |
+| /system/app/getTranslatesV2 | [system_app_getTranslatesV2_test.dart](system/system_app_getTranslatesV2_test.dart) | ✅ |
+| /system/country/getAreas | [system_country_getAreas_test.dart](system/system_country_getAreas_test.dart) | ✅ |
+| /system/ai/getAiConfigs | [system_ai_getAiConfigs_test.dart](system/system_ai_getAiConfigs_test.dart) | ✅ |
+| /system/bank/getPayoutChannels | [system_bank_getPayoutChannels_test.dart](system/system_bank_getPayoutChannels_test.dart) | ✅ |
+| /system/app/getTagConfigs | [system_app_getTagConfigs_test.dart](system/system_app_getTagConfigs_test.dart) | ✅ |
+| /system/app/getAdvertisement | [system_app_getAdvertisement_test.dart](system/system_app_getAdvertisement_test.dart) | ✅ |
+| /system/app/checkRegion | [system_app_checkRegion_test.dart](system/system_app_checkRegion_test.dart) | ✅ |
+| /system/ai/getAigConfigs | [system_ai_getAigConfigs_test.dart](system/system_ai_getAigConfigs_test.dart) | ✅ |
+| /system/sensitive/getSensitiveWordsV2 | [system_sensitive_getSensitiveWordsV2_test.dart](system/system_sensitive_getSensitiveWordsV2_test.dart) | ✅ |
+| /system/aiHelp/getConfigList | [system_aiHelp_getConfigList_test.dart](system/system_aiHelp_getConfigList_test.dart) | ✅ |
 
-需要签名的接口还需添加：
-```
-s-time: {timestamp}
-s-sign: {signature}
-```
+### Topia模块
+
+| 接口路径 | 文件 | 状态 |
+|---------|------|------|
+| /topia/listTopicTag | [topia_listTopicTag_test.dart](system/topia_listTopicTag_test.dart) | ❌ |
+| /topia/pageTopic | [topia_pageTopic_test.dart](system/topia_pageTopic_test.dart) | ❌ |
+
+### 直播间模块
+
+| 接口路径 | 文件 | 状态 |
+|---------|------|------|
+| /live/room/getList | [live_room_getList_test.dart](system/live_room_getList_test.dart) | ❌ |
+| /live/room/getDetail | [live_room_getDetail_test.dart](system/live_room_getDetail_test.dart) | ✅ |
+| /live/room/getTopUsers | [live_room_getTopUsers_test.dart](system/live_room_getTopUsers_test.dart) | ✅ |
+
+## 商品/支付模块
+
+| 接口路径 | 文件 | 状态 |
+|---------|------|------|
+| /p/product/getProducts | [p_product_getProducts_test.dart](product/p_product_getProducts_test.dart) | ✅ |
+| /p/product/getCountryProduct | [p_product_getCountryProduct_test.dart](product/p_product_getCountryProduct_test.dart) | ✅ |
+| /p/product/getProductCodes | [p_product_getProductCodes_test.dart](product/p_product_getProductCodes_test.dart) | ✅ |
+| /p/product/getProductsWithCoupon | [p_product_getProductsWithCoupon_test.dart](product/p_product_getProductsWithCoupon_test.dart) | ✅ |
+| /p/exchangeStore/getStores | [p_exchangeStore_getStores_test.dart](product/p_exchangeStore_getStores_test.dart) | ✅ |
+| /p/downgrade/getConfig | [p_downgrade_getConfig_test.dart](product/p_downgrade_getConfig_test.dart) | ✅ |
+
+### 订单/优惠券
+
+| 接口路径 | 文件 | 状态 |
+|---------|------|------|
+| /p/order/getOrderList | [p_order_getOrderList_test.dart](product/p_order_getOrderList_test.dart) | ❌ |
+| /p/order/getSplitOrder | [p_order_getSplitOrder_test.dart](product/p_order_getSplitOrder_test.dart) | ✅ |
+| /p/order/getOrderSimpleList | [p_order_getOrderSimpleList_test.dart](product/p_order_getOrderSimpleList_test.dart) | ❌ |
+| /p/coupon/getNewCoupon | [p_coupon_getNewCoupon_test.dart](product/p_coupon_getNewCoupon_test.dart) | ❌ |
+| /p/coupon/getUserCoupons | [p_coupon_getUserCoupons_test.dart](product/p_coupon_getUserCoupons_test.dart) | ✅ |
+
+## 通话模块
+
+| 接口路径 | 文件 | 状态 |
+|---------|------|------|
+| /call/call/getCallRecordVoList | [call_call_getCallRecordVoList_test.dart](call/call_call_getCallRecordVoList_test.dart) | ✅ |
+| /call/violate/getConfig | [call_violate_getConfig_test.dart](call/call_violate_getConfig_test.dart) | ✅ |
+| /call/hangup/getConfigs | [call_hangup_getConfigs_test.dart](call/call_hangup_getConfigs_test.dart) | ✅ |
+| /call/call/getFreeInviteCallInfo | [call_call_getFreeInviteCallInfo_test.dart](call/call_call_getFreeInviteCallInfo_test.dart) | ✅ |
+
+## 礼物模块
+
+| 接口路径 | 文件 | 状态 |
+|---------|------|------|
+| /gift/list | [gift_list_test.dart](gift/gift_list_test.dart) | ❌ |
+
+## 失败接口汇总
+
+| 接口路径 | 错误码 | 错误信息 |
+|---------|--------|---------|
+| /user/info | None | 无响应 |
+| /category/list | None | 无响应 |
+| /gift/list | None | 无响应 |
+| /p/order/getOrderList | 1001 | 系统错误 |
+| /p/coupon/getNewCoupon | None | 无响应 |
+| /p/order/getOrderSimpleList | 1006 | 参数错误 |
+| /user/anchorMoment/publish | 1006 | 参数错误 |
+| /anchor/list | None | 无响应 |
+| /anchor/detail | None | 无响应 |
+| /user/anchorMoment/anchorGetOtherMoment | 1001 | 系统错误 |
+| /user/anchorMoment/userGetMoment | 1001 | 系统错误 |
+| /user/anchorMoment/getComments | 1001 | 系统错误 |
+| /topia/listTopicTag | None | 无响应 |
+| /topia/pageTopic | None | 无响应 |
+| /user/heartbeatLevel/getRuleList | None | 无响应 |
+| /user/heartbeatLevel/batchGetHeartbeatValues | 1001 | 系统错误 |
+| /live/room/getList | 1006 | 参数错误 |

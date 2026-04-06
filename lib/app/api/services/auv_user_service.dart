@@ -10,6 +10,8 @@ import '../models/user/auv_relation_count_response.dart';
 import '../models/user/auv_like_list_response.dart';
 import '../models/user/auv_follow_list_response.dart';
 import '../models/user/auv_follow_list_v2_response.dart';
+import '../models/auv_invite_model.dart';
+import '../models/auv_user_model.dart';
 
 /// 用户服务
 /// 
@@ -23,9 +25,11 @@ class AuvUserService extends AuvBaseService {
   }
 
   /// 获取用户详情（我的页面）
-  /// 
+
   /// 获取当前登录用户的详细信息，包含金币余额、VIP状态、粉丝数等
-  /// 
+
+  ///
+
   /// 返回值: 用户详情响应，包含用户基本信息、账户数据、等级信息等
   Future<AuvBaseResponse<AuvUserDetailResponse>> getUserDetail() async {
     try {
@@ -36,6 +40,909 @@ class AuvUserService extends AuvBaseService {
       );
     } catch (e) {
       return handleError<AuvUserDetailResponse>(e);
+    }
+  }
+
+  /// 不登录获取R信息
+  ///
+  /// 不登录状态下获取用户审核模式等信息
+  ///
+  /// 【请求参数】
+  /// 无
+  ///
+  /// 【返回值】
+  /// 返回R信息:
+  ///   - rFlag: 是否审核模式，0.否，1.是
+  ///   - aFlag: 未知
+  ///   - tFlag: 未知
+  ///   - nickname: 用户昵称
+  ///   - turl: h5地址
+  ///
+  /// 示例:
+  /// ```dart
+  /// final result = await userService.getRInfo();
+  /// if (result.success && result.data != null) {
+  ///   print('是否审核模式: ${result.data!.isReviewMode}');
+  ///   print('H5地址: ${result.data!.turl}');
+  /// }
+  /// ```
+  Future<AuvBaseResponse<AuvRInfoResponse>> getRInfo() async {
+    try {
+      final response = await get(AuvNetRoutes.getRInfo);
+      return handleResponse<AuvRInfoResponse>(
+        response.data,
+        (data) => AuvRInfoResponse.fromJson(data),
+      );
+    } catch (e) {
+      return handleError<AuvRInfoResponse>(e);
+    }
+  }
+
+  /// 获取邀请奖励配置列表
+  ///
+  /// 获取邀请奖励的配置列表
+  ///
+  /// 【请求参数】
+  /// 无
+  ///
+  /// 【返回值】
+  /// 返回邀请奖励配置列表:
+  ///   - countryCode: 国家编码
+  ///   - countryName: 国家名称
+  ///   - countryPath: 国旗地址
+  ///   - femaleAuthCoins: 被邀请女用户认证奖励（金币）
+  ///   - femaleIncomeCoins: 被邀请女用户收入达标奖励（金币）
+  ///
+  /// 示例:
+  /// ```dart
+  /// final result = await userService.queryInviteRewardConfig();
+  /// if (result.success && result.data != null) {
+  ///   for (final config in result.data!) {
+  ///     print('${config.countryName}: 认证奖励 ${config.femaleAuthCoins}金币');
+  ///   }
+  /// }
+  /// ```
+  Future<AuvBaseResponse<List<AuvInviteRewardConfigResponse>>> queryInviteRewardConfig() async {
+    try {
+      final response = await get(AuvNetRoutes.queryInviteRewardConfig);
+      return handleListResponse<AuvInviteRewardConfigResponse>(
+        response.data,
+        (data) => AuvInviteRewardConfigResponse.fromJson(data),
+      );
+    } catch (e) {
+      return handleError<List<AuvInviteRewardConfigResponse>>(e);
+    }
+  }
+
+  /// 根据邀请码查询用户ID
+  ///
+  /// 根据邀请码查询对应的用户ID
+  ///
+  /// 【请求参数】
+  /// [inviteCode] 邀请码（必填）
+  ///
+  /// 【返回值】
+  /// 返回邀请人信息:
+  ///   - userId: 邀请人用户id
+  ///   - inviteCode: 邀请码
+  ///
+  /// 示例:
+  /// ```dart
+  /// final result = await userService.getUserIdByInviteCode('ABC123');
+  /// if (result.success && result.data != null) {
+  ///   print('邀请人ID: ${result.data!.userId}');
+  /// }
+  /// ```
+  Future<AuvBaseResponse<AuvUserIdByInviteCodeResponse>> getUserIdByInviteCode({
+    required String inviteCode,
+  }) async {
+    try {
+      final response = await get(
+        AuvNetRoutes.getUserIdByInviteCode,
+        queryParameters: {'inviteCode': inviteCode},
+      );
+      return handleResponse<AuvUserIdByInviteCodeResponse>(
+        response.data,
+        (data) => AuvUserIdByInviteCodeResponse.fromJson(data),
+      );
+    } catch (e) {
+      return handleError<AuvUserIdByInviteCodeResponse>(e);
+    }
+  }
+
+  /// 获取昵称头像审核状态
+  ///
+  /// 获取用户昵称和头像的审核状态
+  ///
+  /// 【请求参数】
+  /// 无
+  ///
+  /// 【返回值】
+  /// 返回审核状态:
+  ///   - portraitStatus: 头像审核状态，0.待审核，1.审核通过，2.审核失败
+  ///   - nicknameStatus: 昵称审核状态，0.待审核，1.审核通过，2.审核失败
+  ///   - portraitUpdatedAt: 头像审核变更时间
+  ///   - nicknameUpdatedAt: 昵称审核变更时间
+  ///
+  /// 示例:
+  /// ```dart
+  /// final result = await userService.getNicknamePortraitStatus();
+  /// if (result.success && result.data != null) {
+  ///   print('头像状态: ${result.data!.portraitStatusDesc}');
+  ///   print('昵称状态: ${result.data!.nicknameStatusDesc}');
+  ///   if (result.data!.isPortraitPending) {
+  ///     print('头像正在审核中');
+  ///   }
+  /// }
+  /// ```
+  Future<AuvBaseResponse<AuvNicknamePortraitStatusResponse>> getNicknamePortraitStatus() async {
+    try {
+      final response = await get(AuvNetRoutes.getNicknamePortraitStatus);
+      return handleResponse<AuvNicknamePortraitStatusResponse>(
+        response.data,
+        (data) => AuvNicknamePortraitStatusResponse.fromJson(data),
+      );
+    } catch (e) {
+      return handleError<AuvNicknamePortraitStatusResponse>(e);
+    }
+  }
+
+  /// 获取每日签到相关数据
+  ///
+  /// 获取每日签到的相关信息和奖励列表
+  ///
+  /// 【请求参数】
+  /// 无
+  ///
+  /// 【返回值】
+  /// 返回签到数据:
+  ///   - signDay: 此刻待签到的天数（=7时前6天全签；=0时7天全签）
+  ///   - signFlag: 此刻是否需要签到
+  ///   - nexTimes: 下一次倒计时时间
+  ///   - rewardList: 奖励列表
+  ///
+  /// 示例:
+  /// ```dart
+  /// final result = await userService.getSignInVo();
+  /// if (result.success && result.data != null) {
+  ///   print('待签到天数: ${result.data!.signDay}');
+  ///   print('是否需要签到: ${result.data!.needsSignIn}');
+  ///   for (final reward in result.data!.rewardList) {
+  ///     print('第${reward.signDay}天: ${reward.rewardDesc}');
+  ///   }
+  /// }
+  /// ```
+  Future<AuvBaseResponse<AuvSignInVoResponse>> getSignInVo() async {
+    try {
+      final response = await get(AuvNetRoutes.getSignInVo);
+      return handleResponse<AuvSignInVoResponse>(
+        response.data,
+        (data) => AuvSignInVoResponse.fromJson(data),
+      );
+    } catch (e) {
+      return handleError<AuvSignInVoResponse>(e);
+    }
+  }
+
+  /// 检查用户是否缺少某些数据
+  ///
+  /// 检查用户是否填写了必要的个人资料（签名、标签等）
+  ///
+  /// 【请求参数】
+  /// 无
+  ///
+  /// 【返回值】
+  /// 返回用户资料检查结果:
+  ///   - userId: 用户ID
+  ///   - hasSignature: 是否有签名（0.否，1.是）
+  ///   - hasTag: 是否有标签（0.否，1.是）
+  ///
+  /// 示例:
+  /// ```dart
+  /// final result = await userService.checkUserDetail();
+  /// if (result.success && result.data != null) {
+  ///   print('用户ID: ${result.data!.userId}');
+  ///   print('是否有签名: ${result.data!.hasSetSignature}');
+  ///   print('是否有标签: ${result.data!.hasSetTag}');
+  ///   print('资料是否完整: ${result.data!.isProfileComplete}');
+  ///   print('缺少: ${result.data!.missingItems}');
+  /// }
+  /// ```
+  Future<AuvBaseResponse<AuvUserCheckDetail>> checkUserDetail() async {
+    try {
+      final response = await get(AuvNetRoutes.checkUserDetail);
+      return handleResponse<AuvUserCheckDetail>(
+        response.data,
+        (data) => AuvUserCheckDetail.fromJson(data),
+      );
+    } catch (e) {
+      return handleError<AuvUserCheckDetail>(e);
+    }
+  }
+
+  /// 获取多账号用户
+  ///
+  /// 存在多个账号时返回余额最多和最新登录的一个账号，与游客登录逻辑一致
+  ///
+  /// 【请求参数】
+  /// 无
+  ///
+  /// 【返回值】
+  /// 返回多账号用户信息:
+  ///   - userId: 用户ID
+  ///   - username: 用于显示的UID
+  ///   - nickname: 用户昵称
+  ///   - portrait: 头像
+  ///   - email: 邮箱
+  ///   - sex: 性别，1.男，2.女
+  ///   - oauthTypes: 登录方式列表，0.谷歌登录，4.账号密码登录
+  ///
+  /// 示例:
+  /// ```dart
+  /// final result = await userService.getMultiUser();
+  /// if (result.success && result.data != null) {
+  ///   final user = result.data!;
+  ///   print('用户ID: ${user.userId}');
+  ///   print('昵称: ${user.nickname}');
+  ///   print('登录方式: ${user.oauthTypeDescs}');
+  /// }
+  /// ```
+  Future<AuvBaseResponse<AuvMultiUserResponse>> getMultiUser() async {
+    try {
+      final response = await get(AuvNetRoutes.getMultiUser);
+      return handleResponse<AuvMultiUserResponse>(
+        response.data,
+        (data) => AuvMultiUserResponse.fromJson(data),
+      );
+    } catch (e) {
+      return handleError<AuvMultiUserResponse>(e);
+    }
+  }
+
+  /// 获取用户钻石排行
+  ///
+  /// 【请求参数】
+  /// - timeLevel: 排行榜类型，1.当日，2.本周
+  ///
+  /// 【返回值】
+  /// 返回用户钻石排行列表:
+  ///   - userId: 用户ID
+  ///   - username: 用于显示的UID
+  ///   - nickname: 用户昵称
+  ///   - portrait: 头像
+  ///   - vipFlag: 是否VIP
+  ///   - level: 等级值
+  ///   - diamonds: 钻石数，小数点后两位
+  ///
+  /// 示例:
+  /// ```dart
+  /// final result = await userService.getDiamondRanking(timeLevel: 1);
+  /// if (result.success && result.data != null) {
+  ///   for (final item in result.data!) {
+  ///     print('${item.nickname}: ${item.diamonds}');
+  ///   }
+  /// }
+  /// ```
+  Future<AuvBaseResponse<List<AuvDiamondRankingItem>>> getDiamondRanking({
+    required int timeLevel,
+  }) async {
+    try {
+      final response = await get(
+        AuvNetRoutes.getDiamondRanking,
+        queryParameters: {'timeLevel': timeLevel},
+      );
+      return handleListResponse<AuvDiamondRankingItem>(
+        response.data,
+        (data) => AuvDiamondRankingItem.fromJson(data),
+      );
+    } catch (e) {
+      return handleError<List<AuvDiamondRankingItem>>(e);
+    }
+  }
+
+  /// 获取我的背包
+  ///
+  /// 获取当前用户的道具背包列表，包含视频卡、钻石加成卡、礼物卡等
+  ///
+  /// 【返回值】
+  /// 返回用户道具列表
+  ///   - userId: 用户id
+  ///   - propType: 道具类型，1.视频卡，2.钻石加成卡，3.礼物卡，4.聊天卡，5.匹配卡，6.头像框
+  ///   - propValue: 视频卡时长（毫秒数）/钻石加成/礼物id
+  ///   - propNum: 道具数量
+  ///   - name: 礼物卡 的 礼物名称
+  ///   - icon: 礼物卡 的礼物图标
+  ///   - animEffectUrl: 礼物卡 的礼物特效
+  ///
+  /// 示例:
+  /// ```dart
+  /// final result = await userService.getUserPropVo();
+  /// if (result.success && result.data != null) {
+  ///   for (final prop in result.data!) {
+  ///     print('道具类型: ${prop.propTypeLabel}');
+  ///     print('数量: ${prop.propNum}');
+  ///     if (prop.propType == AuvPropType.videoCard) {
+  ///       print('视频卡时长: ${prop.videoCardSeconds}秒');
+  ///     }
+  ///   }
+  /// }
+  /// ```
+  Future<AuvBaseResponse<List<AuvUserPropModel>>> getUserPropVo() async {
+    try {
+      final response = await get(AuvNetRoutes.getUserPropVo);
+      return handleListResponse<AuvUserPropModel>(
+        response.data,
+        (data) => AuvUserPropModel.fromJson(data),
+      );
+    } catch (e) {
+      return handleError<List<AuvUserPropModel>>(e);
+    }
+  }
+
+  /// 用户端-获取钻石/金币明细
+  ///
+  /// 分页查询用户的钻石或金币变动明细记录
+  ///
+  /// 【请求参数】
+  /// [pageNum] 页码（必填）
+  /// [pageSize] 每页条数（必填）
+  /// [condition] 查询条件（必填）
+  ///   - action: 变动类型，1.收入，2.支出
+  ///   - startTimes: 开始时间毫秒时间戳
+  ///   - endTimes: 结束时间毫秒时间戳
+  ///   - isGame: 是否查看游戏明细
+  ///
+  /// 【返回值】
+  /// 返回分页明细数据
+  ///   - total: 总记录数
+  ///   - list: 明细列表
+  ///     - userId: 用户id
+  ///     - recordType: 消费代码
+  ///     - recordTypeStr: 类型描述
+  ///     - action: 变动类型，1.收入，2.支出
+  ///     - createTimes: 时间戳
+  ///     - value: 钻石数or金币数（负数表示支出）
+  ///   - pageNum: 当前页码
+  ///   - pageSize: 每页条数
+  ///   - pages: 总页数
+  ///   - hasNextPage: 是否有下一页
+  ///   - isFirstPage: 是否第一页
+  ///   - isLastPage: 是否最后一页
+  ///
+  /// 示例:
+  /// ```dart
+  /// // 查询支出明细
+  /// final result = await userService.getUserBalanceRecords(
+  ///   pageNum: 1,
+  ///   pageSize: 20,
+  ///   condition: AuvBalanceRecordCondition(
+  ///     action: 2,
+  ///     startTimes: DateTime.now().subtract(Duration(days: 30)).millisecondsSinceEpoch,
+  ///     endTimes: DateTime.now().millisecondsSinceEpoch,
+  ///   ),
+  /// );
+  /// if (result.success && result.data != null) {
+  ///   print('总共 ${result.data!.total} 条记录');
+  ///   for (final record in result.data!.list ?? []) {
+  ///     print('${record.recordTypeStr}: ${record.value}');
+  ///   }
+  /// }
+  /// ```
+  Future<AuvBaseResponse<AuvBalanceRecordDataResponse>> getUserBalanceRecords({
+    required int pageNum,
+    required int pageSize,
+    required AuvBalanceRecordCondition condition,
+  }) async {
+    try {
+      final response = await post(
+        AuvNetRoutes.getUserBalanceRecords,
+        data: {
+          'condition': condition.toJson(),
+          'pageNum': pageNum,
+          'pageSize': pageSize,
+        },
+        needSign: false,
+      );
+      return handleObjectResponse<AuvBalanceRecordDataResponse>(
+        response.data,
+        (data) => AuvBalanceRecordDataResponse.fromJson(data),
+      );
+    } catch (e) {
+      return handleError<AuvBalanceRecordDataResponse>(e);
+    }
+  }
+
+  /// 设置用户推送token
+  ///
+  /// 设置用户的Firebase推送token，用于接收推送通知
+  ///
+  /// 【请求参数】
+  /// [firebaseToken] 推送token（必填）
+  ///
+  /// 【返回值】
+  /// 无
+  ///
+  /// 示例:
+  /// ```dart
+  /// final result = await userService.updateFirebaseToken(
+  ///   firebaseToken: 'your-firebase-token-here',
+  /// );
+  /// ```
+  Future<AuvBaseResponse<void>> updateFirebaseToken({
+    required String firebaseToken,
+  }) async {
+    try {
+      final response = await post(
+        AuvNetRoutes.updateFirebaseToken,
+        data: {'firebaseToken': firebaseToken},
+        needSign: false,
+      );
+      return handleVoidResponse(response.data);
+    } catch (e) {
+      return handleError<void>(e);
+    }
+  }
+
+  /// 设置用户广告归因
+  ///
+  /// 设置用户的广告归因信息，用于渠道统计
+  ///
+  /// 【请求参数】
+  /// [network] 归因渠道名称（必填）
+  /// [campaign] 推广活动名称（可选）
+  /// [clickLabel] 安装被标记的点击标签（可选）
+  /// [trackerToken] 设备当前归因跟踪链接的跟踪码（可选）
+  /// [trackerName] 设备当前归因跟踪链接的名称（可选）
+  /// [adgroup] 设备当前归因广告组的名称（可选）
+  /// [creative] 设备当前归因素材的名称（可选）
+  /// [adid] 设备的唯一 Adjust ID（可选）
+  /// [costType] 推广活动定价模型，如 cpi（可选）
+  /// [costAmount] 安装成本（可选）
+  /// [costCurrency] 成本相关的货币代码，ISO 4217标准，3字符（可选）
+  ///
+  /// 【返回值】
+  /// 无
+  ///
+  /// 示例:
+  /// ```dart
+  /// final result = await userService.updateAdFlag(
+  ///   network: 'google',
+  ///   campaign: 'summer_promo',
+  ///   adid: 'abc123',
+  /// );
+  /// ```
+  Future<AuvBaseResponse<void>> updateAdFlag({
+    required String network,
+    String? campaign,
+    String? clickLabel,
+    String? trackerToken,
+    String? trackerName,
+    String? adgroup,
+    String? creative,
+    String? adid,
+    String? costType,
+    String? costAmount,
+    String? costCurrency,
+  }) async {
+    try {
+      final response = await post(
+        AuvNetRoutes.updateAdFlag,
+        data: {
+          'network': network,
+          if (campaign != null) 'campaign': campaign,
+          if (clickLabel != null) 'clickLabel': clickLabel,
+          if (trackerToken != null) 'trackerToken': trackerToken,
+          if (trackerName != null) 'trackerName': trackerName,
+          if (adgroup != null) 'adgroup': adgroup,
+          if (creative != null) 'creative': creative,
+          if (adid != null) 'adid': adid,
+          if (costType != null) 'costType': costType,
+          if (costAmount != null) 'costAmount': costAmount,
+          if (costCurrency != null) 'costCurrency': costCurrency,
+        },
+        needSign: false,
+      );
+      return handleVoidResponse(response.data);
+    } catch (e) {
+      return handleError<void>(e);
+    }
+  }
+
+  /// 注销账号
+  ///
+  /// 注销当前登录用户账号，注销后不可恢复
+  ///
+  /// 【请求参数】
+  /// 无
+  ///
+  /// 【返回值】
+  /// 无
+  ///
+  /// 示例:
+  /// ```dart
+  /// final result = await userService.deleteUser();
+  /// if (result.success) {
+  ///   // 账号已注销，跳转到登录页
+  /// }
+  /// ```
+  Future<AuvBaseResponse<void>> deleteUser() async {
+    try {
+      final response = await post(
+        AuvNetRoutes.deleteUser,
+        needSign: false,
+      );
+      return handleVoidResponse(response.data);
+    } catch (e) {
+      return handleError<void>(e);
+    }
+  }
+
+  /// 根据账号密码注销账号
+  ///
+  /// 根据用户名和密码注销账号，注销后不可恢复
+  ///
+  /// 【请求参数】
+  /// [username] 用户名（必填）
+  /// [password] 明文密码（必填）
+  ///
+  /// 【返回值】
+  /// 无
+  ///
+  /// 示例:
+  /// ```dart
+  /// final result = await userService.deleteUserByPassword(
+  ///   username: 'user@example.com',
+  ///   password: 'your_password',
+  /// );
+  /// if (result.success) {
+  ///   // 账号已注销，跳转到登录页
+  /// }
+  /// ```
+  Future<AuvBaseResponse<void>> deleteUserByPassword({
+    required String username,
+    required String password,
+  }) async {
+    try {
+      final response = await post(
+        AuvNetRoutes.deleteUserByPassword,
+        data: {
+          'username': username,
+          'password': password,
+        },
+        needSign: false,
+      );
+      return handleVoidResponse(response.data);
+    } catch (e) {
+      return handleError<void>(e);
+    }
+  }
+
+  /// 更新App分数
+  ///
+  /// 更新用户对App的评价分数
+  ///
+  /// 【请求参数】
+  /// [recordId] 记录id（必填）
+  /// [score] 分数（必填）
+  /// [remark] 备注（可选）
+  ///
+  /// 【返回值】
+  /// 无
+  ///
+  /// 示例:
+  /// ```dart
+  /// final result = await userService.updateAppRateScore(
+  ///   recordId: 12345,
+  ///   score: 4.5,
+  ///   remark: 'Great app!',
+  /// );
+  /// if (result.success) {
+  ///   // 分数更新成功
+  /// }
+  /// ```
+  Future<AuvBaseResponse<void>> updateAppRateScore({
+    required int recordId,
+    required double score,
+    String? remark,
+  }) async {
+    try {
+      final response = await post(
+        AuvNetRoutes.updateAppRateScore,
+        data: {
+          'recordId': recordId,
+          'score': score,
+          if (remark != null) 'remark': remark,
+        },
+        needSign: false,
+      );
+      return handleVoidResponse(response.data);
+    } catch (e) {
+      return handleError<void>(e);
+    }
+  }
+
+  /// 任务领取
+  ///
+  /// 领取任务奖励
+  ///
+  /// 【请求参数】
+  /// [taskUnique] 任务唯一标识（必填）
+  /// [round] 轮次（可选），默认1
+  ///
+  /// 【返回值】
+  /// 返回任务奖励信息:
+  ///   - rewardJson: 奖励JSON列表
+  ///   - rewardVo: 奖励详情
+  ///   - taskUnique: 任务唯一标识
+  ///
+  /// 示例:
+  /// ```dart
+  /// final result = await userService.userDraw(
+  ///   taskUnique: 'first_recharge',
+  ///   round: 1,
+  /// );
+  /// if (result.success && result.data != null) {
+  ///   print('钻石奖励: ${result.data!.rewardVo?.diamondNum}');
+  ///   print('任务标识: ${result.data!.taskUnique}');
+  /// }
+  /// ```
+  Future<AuvBaseResponse<AuvTaskDrawResponse>> userDraw({
+    required String taskUnique,
+    int? round,
+  }) async {
+    try {
+      final response = await post(
+        AuvNetRoutes.userDraw,
+        data: {
+          'taskUnique': taskUnique,
+          if (round != null) 'round': round,
+        },
+        needSign: false,
+      );
+      return handleResponse<AuvTaskDrawResponse>(
+        response.data,
+        (data) => AuvTaskDrawResponse.fromJson(data),
+      );
+    } catch (e) {
+      return handleError<AuvTaskDrawResponse>(e);
+    }
+  }
+
+  /// 是否有过填写邀请码
+  ///
+  /// 检查用户是否填写过邀请码
+  ///
+  /// 【请求参数】
+  /// 无
+  ///
+  /// 【返回值】
+  /// true: 有邀请记录
+  /// false: 没有邀请记录
+  ///
+  /// 示例:
+  /// ```dart
+  /// final result = await userService.isHasInviteRecord();
+  /// if (result.success) {
+  ///   final hasRecord = result.data ?? false;
+  ///   print('是否有邀请记录: $hasRecord');
+  /// }
+  /// ```
+  Future<AuvBaseResponse<bool>> isHasInviteRecord() async {
+    try {
+      final response = await post(
+        AuvNetRoutes.isHasInviteRecord,
+        needSign: false,
+      );
+      final data = response.data['data'];
+      return AuvBaseResponse<bool>(
+        code: response.data['code'],
+        message: response.data['message'],
+        timestamp: response.data['timestamp'],
+        data: data == true,
+      );
+    } catch (e) {
+      return handleError<bool>(e);
+    }
+  }
+
+  /// 获取邀请奖励记录列表
+  ///
+  /// 获取用户的邀请奖励记录列表
+  ///
+  /// 【请求参数】
+  /// 无
+  ///
+  /// 【返回值】
+  /// 返回邀请用户列表:
+  ///   - inviteeUserId: 被邀请用户ID
+  ///   - nickname: 昵称
+  ///   - portrait: 头像
+  ///   - createdAt: 创建时间
+  ///   - type: 类型（1注册奖励 2充值奖励）
+  ///   - reward: 奖励钻石数（×100）
+  ///
+  /// 示例:
+  /// ```dart
+  /// final result = await userService.getInviteUserVoList();
+  /// if (result.success && result.data != null) {
+  ///   for (final user in result.data!) {
+  ///     print('被邀请用户: ${user.nickname}');
+  ///     print('奖励类型: ${user.rewardTypeStr}');
+  ///     print('奖励钻石: ${user.reward}');
+  ///   }
+  /// }
+  /// ```
+  Future<AuvBaseResponse<List<AuvInviteUserVoResponse>>> getInviteUserVoList() async {
+    try {
+      final response = await get(
+        AuvNetRoutes.getInviteUserVoList,
+        needSign: false,
+      );
+      return handleListResponse<AuvInviteUserVoResponse>(
+        response.data,
+        (data) => AuvInviteUserVoResponse.fromJson(data),
+      );
+    } catch (e) {
+      return handleError<List<AuvInviteUserVoResponse>>(e);
+    }
+  }
+
+  /// 邀请者获取邀请信息
+  ///
+  /// 获取当前用户的邀请信息，包括邀请码、总收入、奖励等
+  ///
+  /// 【请求参数】
+  /// 无
+  ///
+  /// 【返回值】
+  /// 返回邀请信息:
+  ///   - inviteCode: 邀请码
+  ///   - awardIncome: 总收入
+  ///   - inviteAward: 注册邀请奖励
+  ///   - rechargeAward: 充值邀请奖励
+  ///   - shareUrl: 分享链接
+  ///   - inviteDailyCount: 每日邀请最大人数
+  ///   - inviteCount: 当天已邀请人数
+  ///
+  /// 示例:
+  /// ```dart
+  /// final result = await userService.getInviteInfo();
+  /// if (result.success && result.data != null) {
+  ///   print('邀请码: ${result.data!.inviteCode}');
+  ///   print('总收入: ${result.data!.awardIncome}');
+  ///   print('分享链接: ${result.data!.shareUrl}');
+  ///   print('剩余可邀请: ${result.data!.remainingInviteCount}');
+  /// }
+  /// ```
+  Future<AuvBaseResponse<AuvInviteInfo>> getInviteInfo() async {
+    try {
+      final response = await get(
+        AuvNetRoutes.getInviteInfo,
+        needSign: false,
+      );
+      return handleResponse<AuvInviteInfo>(
+        response.data,
+        (data) => AuvInviteInfo.fromJson(data),
+      );
+    } catch (e) {
+      return handleError<AuvInviteInfo>(e);
+    }
+  }
+
+  /// 绑定邀请码
+  ///
+  /// 用户绑定邀请码，用于邀请奖励
+  ///
+  /// 【请求参数】
+  /// [inviteCode] 邀请码（必填）
+  ///
+  /// 【返回值】
+  /// 成功返回null，失败返回错误信息
+  ///
+  /// 示例:
+  /// ```dart
+  /// final result = await userService.bindInviteCode('0e412b7d');
+  /// if (result.success) {
+  ///   print('邀请码绑定成功');
+  /// }
+  /// ```
+  Future<AuvBaseResponse<void>> bindInviteCode(String inviteCode) async {
+    try {
+      final response = await post(
+        '${AuvNetRoutes.bindInviteCode}/$inviteCode',
+        needSign: false,
+      );
+      return handleResponse<void>(
+        response.data,
+        (_) {},
+      );
+    } catch (e) {
+      return handleError<void>(e);
+    }
+  }
+
+  /// 获取邀请绑定记录
+  ///
+  /// 获取当前用户的邀请绑定记录信息
+  ///
+  /// 【请求参数】
+  /// 无
+  ///
+  /// 【返回值】
+  /// 返回邀请绑定记录:
+  ///   - createdAt: 注册时间戳
+  ///   - hasBindInviteCode: 是否绑定邀请码
+  ///   - canBindInviteCode: 是否可以绑定邀请码
+  ///   - inviteCode: 邀请码
+  ///
+  /// 示例:
+  /// ```dart
+  /// final result = await userService.getInviteRecord();
+  /// if (result.success && result.data != null) {
+  ///   print('是否已绑定: ${result.data!.hasBindInviteCode}');
+  ///   print('是否可以绑定: ${result.data!.canBindInviteCode}');
+  ///   print('邀请码: ${result.data!.inviteCode}');
+  ///   print('注册时间: ${result.data!.registrationTime}');
+  /// }
+  /// ```
+  Future<AuvBaseResponse<AuvInviteRecord>> getInviteRecord() async {
+    try {
+      final response = await post(
+        AuvNetRoutes.getInviteRecord,
+        needSign: false,
+      );
+      return handleResponse<AuvInviteRecord>(
+        response.data,
+        (data) => AuvInviteRecord.fromJson(data),
+      );
+    } catch (e) {
+      return handleError<AuvInviteRecord>(e);
+    }
+  }
+
+  /// 举报/反馈
+  ///
+  /// 提交用户举报或反馈
+  ///
+  /// 【请求参数】
+  /// [request] 举报/反馈请求对象（必填）
+  ///   - type: 举报类型，1.反馈，2.举报，3.官方回复
+  ///   - topicType: 举报主题（必填）
+  ///     * 1.广告骚扰，2.对话懒散，3.主播不露脸，4.攻击谩骂
+  ///     * 5.虚假信息，6.诈骗，7.政治，8.淫秽色情，9.其他，10.虐待儿童
+  ///   - content: 内容（必填）
+  ///   - anchorUserId: 主播的用户ID（可选）
+  ///   - linkId: 关联id，如举报通话则传入频道id（可选）
+  ///   - path: 图片地址，多个图片用逗号分开（可选）
+  ///
+  /// 【返回值】
+  /// 无
+  ///
+  /// 示例:
+  /// ```dart
+  /// final result = await userService.feedbackSave(
+  ///   request: AuvFeedbackRequest(
+  ///     type: AuvFeedbackType.report,
+  ///     topicType: AuvFeedbackTopicType.abuse,
+  ///     content: '该用户多次进行人身攻击',
+  ///     anchorUserId: 12345,
+  ///     linkId: 67890,
+  ///     path: 'https://example.com/img1.jpg',
+  ///   ),
+  /// );
+  /// ```
+  Future<AuvBaseResponse<void>> feedbackSave({
+    required AuvFeedbackRequest request,
+  }) async {
+    try {
+      final response = await post(
+        AuvNetRoutes.feedbackSave,
+        data: request.toJson(),
+        needSign: false,
+      );
+      return handleVoidResponse(response.data);
+    } catch (e) {
+      return handleError<void>(e);
     }
   }
 
@@ -79,25 +986,44 @@ class AuvUserService extends AuvBaseService {
   /// 
   /// 用户每日签到领取奖励
   /// 
-  /// [signDay] 签到天数（必填），表示连续签到的天数
-  /// [dateStr] 签到日期字符串（可选），格式如 "2024-01-01"
+  /// 【请求参数】
+  /// [signDay] 签到天数（必填），表示连续签到的天数，作为路径参数
+  /// [dateStr] 签到日期字符串（可选），格式如 "2024-01-01"，用于测试
   /// 
-  /// 返回值: 签到奖励响应，包含奖励信息
+  /// 【请求头】
+  /// - s-time: 请求时间戳（自动添加）
+  /// - s-sign: 请求签名（自动添加，needSign: true）
   /// 
-  /// 注意: 此接口需要签名验证
+  /// 【返回值】
+  /// 返回签到奖励响应:
+  ///   - id: 奖品id
+  ///   - name: 奖品名称
+  ///   - icon: 奖品图标
+  ///   - countryCode: 国家编码
+  ///   - rewardType: 签到奖品类型（1.钻石，2.视频卡，3.匹配卡，4.聊天卡）
+  ///   - rewardValue: 奖品数量
+  ///   - signDay: 签到天数
+  /// 
+  /// 【注意】此接口需要签名验证
+  /// 
+  /// 示例:
+  /// ```dart
+  /// final result = await userService.signIn(signDay: 1);
+  /// if (result.success && result.data != null) {
+  ///   print('获得: ${result.data!.name} x${result.data!.rewardValue}');
+  /// }
+  /// ```
   Future<AuvBaseResponse<AuvSignRewardResponse>> signIn({
     required int signDay,
     String? dateStr,
   }) async {
     try {
-      final data = {
-        'signDay': signDay,
-        if (dateStr != null) 'dateStr': dateStr,
-      };
+      final url = dateStr != null
+          ? '${AuvNetRoutes.signIn}/$signDay?dateStr=$dateStr'
+          : '${AuvNetRoutes.signIn}/$signDay';
 
       final response = await post(
-        AuvNetRoutes.signIn,
-        data: data,
+        url,
         needSign: true,
       );
       return handleResponse<AuvSignRewardResponse>(
@@ -106,6 +1032,35 @@ class AuvUserService extends AuvBaseService {
       );
     } catch (e) {
       return handleError<AuvSignRewardResponse>(e);
+    }
+  }
+
+  /// VIP特权每日领取
+  ///
+  /// VIP用户每日领取特权奖励
+  ///
+  /// 【请求参数】
+  /// 无
+  ///
+  /// 【返回值】
+  /// 返回空（data为null）
+  ///
+  /// 示例:
+  /// ```dart
+  /// final result = await userService.vipSignIn();
+  /// if (result.success) {
+  ///   print('VIP每日奖励领取成功');
+  /// }
+  /// ```
+  Future<AuvBaseResponse<void>> vipSignIn() async {
+    try {
+      final response = await post(AuvNetRoutes.vipSignIn);
+      return handleResponse<void>(
+        response.data,
+        (_) {},
+      );
+    } catch (e) {
+      return handleError<void>(e);
     }
   }
 
@@ -222,6 +1177,40 @@ class AuvUserService extends AuvBaseService {
       );
     } catch (e) {
       return handleError<List<AuvUserSeeVo>>(e);
+    }
+  }
+
+  /// 随机获取头像列表
+  ///
+  /// 随机获取指定数量的用户头像列表
+  ///
+  /// [size] 头像个数（必填）
+  ///
+  /// 返回值: 头像列表
+  ///
+  /// 示例:
+  /// ```dart
+  /// final result = await userService.getPortraits(size: 10);
+  /// if (result.success && result.data != null) {
+  ///   for (final portrait in result.data!) {
+  ///     print('用户 ${portrait.userId}: ${portrait.portrait}');
+  ///   }
+  /// }
+  /// ```
+  Future<AuvBaseResponse<List<AuvPortraitItemResponse>>> getPortraits({
+    required int size,
+  }) async {
+    try {
+      final response = await get(
+        AuvNetRoutes.getPortraits,
+        queryParameters: {'size': size},
+      );
+      return handleListResponse<AuvPortraitItemResponse>(
+        response.data,
+        (data) => AuvPortraitItemResponse.fromJson(data),
+      );
+    } catch (e) {
+      return handleError<List<AuvPortraitItemResponse>>(e);
     }
   }
 

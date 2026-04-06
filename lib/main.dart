@@ -8,6 +8,7 @@ import 'package:slea_auv/app/routes/auv_pages.dart';
 import 'package:slea_auv/app/routes/auv_routes.dart';
 import 'package:slea_auv/app/services/auv_storage_service.dart';
 import 'package:slea_auv/app/services/auv_api_service.dart';
+import 'package:slea_auv/app/services/auv_translate_service.dart';
 import 'package:slea_auv/app/core/auv_theme.dart';
 import 'package:slea_auv/app/utils/auv_logger.dart';
 
@@ -60,6 +61,11 @@ void main() async {
   apiService.init();
   Get.put<AuvApiService>(apiService);
   AuvLogger.success('API Service initialized', tag: 'MAIN');
+
+  // Initialize Translate Service (singleton)
+  AuvLogger.info('Initializing Translate Service...', tag: 'MAIN');
+  await Get.putAsync(() => AuvTranslateService().init());
+  AuvLogger.success('Translate Service initialized', tag: 'MAIN');
 
   AuvLogger.info('Running app...', tag: 'MAIN');
 

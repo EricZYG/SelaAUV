@@ -255,65 +255,65 @@ class ApiEndpoint {
 List<ApiEndpoint> getAllUserEndpoints() {
   return [
     // 用户信息相关
-    const ApiEndpoint(path: ApiRoutes.userInfo, name: ApiRoutes.userInfoName),
-    const ApiEndpoint(path: ApiRoutes.updateUserInfo, name: ApiRoutes.updateUserInfoName, method: 'POST'),
-    const ApiEndpoint(path: ApiRoutes.uploadAvatar, name: ApiRoutes.uploadAvatarName, method: 'POST'),
-    const ApiEndpoint(path: ApiRoutes.getUserPropVo, name: ApiRoutes.getUserPropVoName),
-    const ApiEndpoint(path: ApiRoutes.getUserBalanceRecords, name: ApiRoutes.getUserBalanceRecordsName, method: 'POST'),
-    const ApiEndpoint(path: ApiRoutes.updateFirebaseToken, name: ApiRoutes.updateFirebaseTokenName, method: 'POST'),
-    const ApiEndpoint(path: ApiRoutes.updateAdFlag, name: ApiRoutes.updateAdFlagName, method: 'POST'),
-    const ApiEndpoint(path: ApiRoutes.deleteUser, name: ApiRoutes.deleteUserName, method: 'POST'),
-
-    // 用户详情相关
-    const ApiEndpoint(path: ApiRoutes.getUserSimple, name: ApiRoutes.getUserSimpleName, queryParameters: {'userId': 10207304}),
-    const ApiEndpoint(path: ApiRoutes.getUserExpand, name: ApiRoutes.getUserExpandName, queryParameters: {'userId': 10207304}),
-    const ApiEndpoint(path: ApiRoutes.getUserExpandNoLogin, name: ApiRoutes.getUserExpandNoLoginName, queryParameters: {'userId': 10207304}),
-    const ApiEndpoint(path: ApiRoutes.getUserExpandV2, name: ApiRoutes.getUserExpandV2Name, queryParameters: {'userId': 10207304}),
-    const ApiEndpoint(path: ApiRoutes.getAnchorExpandV2, name: ApiRoutes.getAnchorExpandV2Name, queryParameters: {'userId': 10207304}),
-    const ApiEndpoint(path: ApiRoutes.getUsers, name: ApiRoutes.getUsersName, method: 'POST', data: {'pageNum': 1, 'pageSize': 10}),
-
-    // 举报/反馈
-    const ApiEndpoint(path: ApiRoutes.feedbackSave, name: ApiRoutes.feedbackSaveName, method: 'POST'),
-
-    // 密码相关
-    const ApiEndpoint(path: ApiRoutes.changePassword, name: ApiRoutes.changePasswordName, method: 'POST'),
-    const ApiEndpoint(path: ApiRoutes.setPassword, name: ApiRoutes.setPasswordName, method: 'POST'),
-
-    // 用户状态相关
-    const ApiEndpoint(path: ApiRoutes.getIsOnlines, name: ApiRoutes.getIsOnlinesName, method: 'POST'),
-    const ApiEndpoint(path: ApiRoutes.getPortraits, name: ApiRoutes.getPortraitsName, queryParameters: {'size': 10}),
-
-    // 账号相关
-    const ApiEndpoint(path: ApiRoutes.logoffDeleteUserByPassword, name: ApiRoutes.logoffDeleteUserByPasswordName, method: 'POST'),
-    const ApiEndpoint(path: ApiRoutes.updateAppRateScore, name: ApiRoutes.updateAppRateScoreName, method: 'POST'),
-
-    // 邀请相关
-    const ApiEndpoint(path: ApiRoutes.isHasInviteRecord, name: ApiRoutes.isHasInviteRecordName, method: 'POST'),
-    const ApiEndpoint(path: ApiRoutes.getInviteUserVoList, name: ApiRoutes.getInviteUserVoListName),
-    const ApiEndpoint(path: ApiRoutes.getInviteInfo, name: ApiRoutes.getInviteInfoName),
-    const ApiEndpoint(path: ApiRoutes.bindInviteCode, name: ApiRoutes.bindInviteCodeName, method: 'POST'),
-    const ApiEndpoint(path: ApiRoutes.getInviteRecord, name: ApiRoutes.getInviteRecordName, method: 'POST'),
-
-    // 用户资料相关
-    const ApiEndpoint(path: ApiRoutes.checkUserDetail, name: ApiRoutes.checkUserDetailName),
-    const ApiEndpoint(path: ApiRoutes.getDialogDetail, name: ApiRoutes.getDialogDetailName),
-    const ApiEndpoint(path: ApiRoutes.publishMoment, name: ApiRoutes.publishMomentName, method: 'POST'),
-    const ApiEndpoint(path: ApiRoutes.setUserAlias, name: ApiRoutes.setUserAliasName, method: 'POST'),
-    const ApiEndpoint(path: ApiRoutes.updateSexDetail, name: ApiRoutes.updateSexDetailName, method: 'POST'),
-    const ApiEndpoint(path: ApiRoutes.updateSexMale, name: ApiRoutes.updateSexMaleName, method: 'POST'),
-
-    // 排行榜相关
-    const ApiEndpoint(path: ApiRoutes.getRewards, name: ApiRoutes.getRewardsName),
-    const ApiEndpoint(path: ApiRoutes.getDiamondRanking, name: ApiRoutes.getDiamondRankingName, queryParameters: {'timeLevel': 1}),
-    const ApiEndpoint(path: ApiRoutes.getFKUsers, name: ApiRoutes.getFKUsersName, method: 'POST'),
-
-    // /user/user 遗漏接口
-    const ApiEndpoint(path: ApiRoutes.getUserDetail, name: ApiRoutes.getUserDetailName),
-    const ApiEndpoint(path: ApiRoutes.signIn, name: ApiRoutes.signInName, method: 'POST', data: {'signDay': 1}),
-    const ApiEndpoint(path: ApiRoutes.heartbeat, name: ApiRoutes.heartbeatName, method: 'POST', data: {'isScreenOff': false, 'rtmStatus': 1}),
-    const ApiEndpoint(path: ApiRoutes.getUserUpdateDetail, name: ApiRoutes.getUserUpdateDetailName),
-    const ApiEndpoint(path: ApiRoutes.updateAlbumUrlList, name: ApiRoutes.updateAlbumUrlListName, method: 'POST'),
-    const ApiEndpoint(path: ApiRoutes.updateUserDetail, name: ApiRoutes.updateUserDetailName, method: 'POST'),
+    // const ApiEndpoint(path: ApiRoutes.userInfo, name: ApiRoutes.userInfoName),
+    // const ApiEndpoint(path: ApiRoutes.updateUserInfo, name: ApiRoutes.updateUserInfoName, method: 'POST'),
+    // const ApiEndpoint(path: ApiRoutes.uploadAvatar, name: ApiRoutes.uploadAvatarName, method: 'POST'),
+    // const ApiEndpoint(path: ApiRoutes.getUserPropVo, name: ApiRoutes.getUserPropVoName),
+    // const ApiEndpoint(path: ApiRoutes.getUserBalanceRecords, name: ApiRoutes.getUserBalanceRecordsName, method: 'POST'),
+    // const ApiEndpoint(path: ApiRoutes.updateFirebaseToken, name: ApiRoutes.updateFirebaseTokenName, method: 'POST'),
+    // const ApiEndpoint(path: ApiRoutes.updateAdFlag, name: ApiRoutes.updateAdFlagName, method: 'POST'),
+    // const ApiEndpoint(path: ApiRoutes.deleteUser, name: ApiRoutes.deleteUserName, method: 'POST'),
+    //
+    // // 用户详情相关
+    // const ApiEndpoint(path: ApiRoutes.getUserSimple, name: ApiRoutes.getUserSimpleName, queryParameters: {'userId': 10207304}),
+    // const ApiEndpoint(path: ApiRoutes.getUserExpand, name: ApiRoutes.getUserExpandName, queryParameters: {'userId': 10207304}),
+    // const ApiEndpoint(path: ApiRoutes.getUserExpandNoLogin, name: ApiRoutes.getUserExpandNoLoginName, queryParameters: {'userId': 10207304}),
+    // const ApiEndpoint(path: ApiRoutes.getUserExpandV2, name: ApiRoutes.getUserExpandV2Name, queryParameters: {'userId': 10207304}),
+    // const ApiEndpoint(path: ApiRoutes.getAnchorExpandV2, name: ApiRoutes.getAnchorExpandV2Name, queryParameters: {'userId': 10207304}),
+    // const ApiEndpoint(path: ApiRoutes.getUsers, name: ApiRoutes.getUsersName, method: 'POST', data: {'pageNum': 1, 'pageSize': 10}),
+    //
+    // // 举报/反馈
+    // const ApiEndpoint(path: ApiRoutes.feedbackSave, name: ApiRoutes.feedbackSaveName, method: 'POST'),
+    //
+    // // 密码相关
+    // const ApiEndpoint(path: ApiRoutes.changePassword, name: ApiRoutes.changePasswordName, method: 'POST'),
+    // const ApiEndpoint(path: ApiRoutes.setPassword, name: ApiRoutes.setPasswordName, method: 'POST'),
+    //
+    // // 用户状态相关
+    // const ApiEndpoint(path: ApiRoutes.getIsOnlines, name: ApiRoutes.getIsOnlinesName, method: 'POST'),
+    // const ApiEndpoint(path: ApiRoutes.getPortraits, name: ApiRoutes.getPortraitsName, queryParameters: {'size': 10}),
+    //
+    // // 账号相关
+    // const ApiEndpoint(path: ApiRoutes.logoffDeleteUserByPassword, name: ApiRoutes.logoffDeleteUserByPasswordName, method: 'POST'),
+    // const ApiEndpoint(path: ApiRoutes.updateAppRateScore, name: ApiRoutes.updateAppRateScoreName, method: 'POST'),
+    //
+    // // 邀请相关
+    // const ApiEndpoint(path: ApiRoutes.isHasInviteRecord, name: ApiRoutes.isHasInviteRecordName, method: 'POST'),
+    // const ApiEndpoint(path: ApiRoutes.getInviteUserVoList, name: ApiRoutes.getInviteUserVoListName),
+    // const ApiEndpoint(path: ApiRoutes.getInviteInfo, name: ApiRoutes.getInviteInfoName),
+    // const ApiEndpoint(path: ApiRoutes.bindInviteCode, name: ApiRoutes.bindInviteCodeName, method: 'POST'),
+    // const ApiEndpoint(path: ApiRoutes.getInviteRecord, name: ApiRoutes.getInviteRecordName, method: 'POST'),
+    //
+    // // 用户资料相关
+    // const ApiEndpoint(path: ApiRoutes.checkUserDetail, name: ApiRoutes.checkUserDetailName),
+    // const ApiEndpoint(path: ApiRoutes.getDialogDetail, name: ApiRoutes.getDialogDetailName),
+    // const ApiEndpoint(path: ApiRoutes.publishMoment, name: ApiRoutes.publishMomentName, method: 'POST'),
+    // const ApiEndpoint(path: ApiRoutes.setUserAlias, name: ApiRoutes.setUserAliasName, method: 'POST'),
+    // const ApiEndpoint(path: ApiRoutes.updateSexDetail, name: ApiRoutes.updateSexDetailName, method: 'POST'),
+    // const ApiEndpoint(path: ApiRoutes.updateSexMale, name: ApiRoutes.updateSexMaleName, method: 'POST'),
+    //
+    // // 排行榜相关
+    // const ApiEndpoint(path: ApiRoutes.getRewards, name: ApiRoutes.getRewardsName),
+    // const ApiEndpoint(path: ApiRoutes.getDiamondRanking, name: ApiRoutes.getDiamondRankingName, queryParameters: {'timeLevel': 1}),
+    // const ApiEndpoint(path: ApiRoutes.getFKUsers, name: ApiRoutes.getFKUsersName, method: 'POST'),
+    //
+    // // /user/user 遗漏接口
+    // const ApiEndpoint(path: ApiRoutes.getUserDetail, name: ApiRoutes.getUserDetailName),
+    // const ApiEndpoint(path: ApiRoutes.signIn, name: ApiRoutes.signInName, method: 'POST', data: {'signDay': 1}),
+    // const ApiEndpoint(path: ApiRoutes.heartbeat, name: ApiRoutes.heartbeatName, method: 'POST', data: {'isScreenOff': false, 'rtmStatus': 1}),
+    // const ApiEndpoint(path: ApiRoutes.getUserUpdateDetail, name: ApiRoutes.getUserUpdateDetailName),
+    // const ApiEndpoint(path: ApiRoutes.updateAlbumUrlList, name: ApiRoutes.updateAlbumUrlListName, method: 'POST'),
+    // const ApiEndpoint(path: ApiRoutes.updateUserDetail, name: ApiRoutes.updateUserDetailName, method: 'POST'),
   ];
 }
 
