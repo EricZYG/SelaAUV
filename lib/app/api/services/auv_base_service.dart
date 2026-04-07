@@ -80,11 +80,23 @@ abstract class AuvBaseService extends GetxService {
     String path, {
     Map<String, dynamic>? queryParameters,
     dio.Options? options,
+    bool needSign = true,
   }) async {
+    final signHeaders = needSign && queryParameters != null
+        ? _getSignHeaders(queryParameters)
+        : <String, String>{};
+
+    final mergedOptions = options?.copyWith(
+      headers: {
+        ...?options.headers,
+        ...signHeaders,
+      },
+    ) ?? (signHeaders.isNotEmpty ? dio.Options(headers: signHeaders) : null);
+
     return _api.get(
       path,
       queryParameters: queryParameters,
-      options: options,
+      options: mergedOptions,
     );
   }
 

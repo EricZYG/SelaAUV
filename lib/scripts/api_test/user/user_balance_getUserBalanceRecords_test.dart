@@ -1,4 +1,8 @@
 /// 用户端-获取钻石/金币明细
+library;
+
+// API response data
+
 ///
 /// 接口: /user/balance/getUserBalanceRecords
 /// 请求方式: POST

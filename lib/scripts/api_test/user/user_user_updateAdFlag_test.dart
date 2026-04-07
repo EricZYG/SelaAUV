@@ -1,4 +1,8 @@
 /// 设置用户广告归因
+library;
+
+// API response data
+
 ///
 /// 接口: /user/user/updateAdFlag
 /// 请求方式: POST

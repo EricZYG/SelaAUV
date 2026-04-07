@@ -21,7 +21,7 @@ class AuvTopicTagItemResponse {
   /// 排序
   final int sort;
 
-  /// 是否关注（0 没关注，1 关注）
+  ///note 使用场景？ 是否关注（0 没关注，1 关注）
   final int isFollow;
 
   /// 用户设置的排序

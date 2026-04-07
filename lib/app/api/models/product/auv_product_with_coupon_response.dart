@@ -56,7 +56,7 @@ class AuvProductWithCouponResponse {
   /// 商品id
   final int? productId;
 
-  /// 商品编码
+  ///note 与后台进行绑定的id 商品编码
   final String? productCode;
 
   /// 美元价格（单位分）

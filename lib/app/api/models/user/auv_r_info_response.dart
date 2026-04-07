@@ -9,10 +9,10 @@ class AuvRInfoResponse {
   /// - 1.是
   final int rFlag;
 
-  /// 未知标志
+  /// note 未知标志
   final int aFlag;
 
-  /// 未知标志
+  /// note  未知标志
   final int tFlag;
 
   /// 用户昵称

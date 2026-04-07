@@ -16,3 +16,4 @@ export 'auv_app_config_user_response.dart';
 export 'auv_app_config_face_verify_response.dart';
 export 'auv_app_config_chat_translate_response.dart';
 export 'auv_translates_v2_response.dart';
+export 'auv_s3_upload_url_response.dart';

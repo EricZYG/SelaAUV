@@ -75,6 +75,45 @@ class AuvSystemService extends AuvBaseService {
     }
   }
 
+  /// 获取S3上传链接V2
+  ///
+  /// 获取S3预签名上传URL，用于文件上传
+  ///
+  /// 【请求参数】
+  /// [suffix] 文件后缀（必填），如 png、jpg、mp4 等
+  ///
+  /// 【返回值】
+  /// 返回上传链接信息:
+  ///   - uploadUrl: 上传用的链接
+  ///   - publicUrl: 访问用的链接
+  ///   - filePath: 文件相对路径
+  ///
+  /// 示例:
+  /// ```dart
+  /// final result = await systemService.getS3UploadUrlV2(suffix: 'jpg');
+  /// if (result.success && result.data != null) {
+  ///   print('上传链接: ${result.data!.uploadUrl}');
+  ///   print('访问链接: ${result.data!.publicUrl}');
+  ///   print('文件路径: ${result.data!.filePath}');
+  /// }
+  /// ```
+  Future<AuvBaseResponse<AuvS3UploadUrlResponse>> getS3UploadUrlV2({
+    required String suffix,
+  }) async {
+    try {
+      final response = await get(
+        AuvNetRoutes.getS3UploadUrlV2,
+        queryParameters: {'suffix': suffix},
+      );
+      return handleResponse<AuvS3UploadUrlResponse>(
+        response.data,
+        (data) => AuvS3UploadUrlResponse.fromJson(data),
+      );
+    } catch (e) {
+      return handleError<AuvS3UploadUrlResponse>(e);
+    }
+  }
+
   /// 获取地区列表
   /// 
   /// 示例:

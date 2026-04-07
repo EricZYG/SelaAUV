@@ -1,4 +1,8 @@
 /// 设置用户推送token
+library;
+
+// API response data
+
 ///
 /// 接口: /user/user/updateFirebaseToken
 /// 请求方式: POST

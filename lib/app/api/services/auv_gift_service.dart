@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:slea_auv/app/api/auv_net_routes.dart';
+import 'package:slea_auv/app/api/enums/auv_gift.dart';
 import 'package:slea_auv/app/api/models/auv_models.dart';
 import 'package:slea_auv/app/api/services/auv_base_service.dart';
 import 'package:slea_auv/app/services/auv_api_service.dart';

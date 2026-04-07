@@ -7,6 +7,7 @@ import 'package:slea_auv/app/services/auv_api_service.dart';
 import 'package:slea_auv/app/api/models/auv_msg_model.dart';
 
 import '../models/user/auv_relation_count_response.dart';
+import '../models/user/auv_invite_user_vo_response.dart';
 import '../models/user/auv_like_list_response.dart';
 import '../models/user/auv_follow_list_response.dart';
 import '../models/user/auv_follow_list_v2_response.dart';

@@ -1,4 +1,8 @@
 /// 接口: /system/app/getTranslatesV2
+library;
+
+// API response data
+
 /// 方法: GET
 /// 状态: 成功
 /// code: 0

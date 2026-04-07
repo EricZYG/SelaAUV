@@ -5,6 +5,13 @@ import 'package:slea_auv/app/api/models/order/order_models.dart';
 import 'package:slea_auv/app/api/services/auv_base_service.dart';
 import 'package:slea_auv/app/services/auv_api_service.dart';
 
+import '../auv_net_routes.dart';
+import '../enums/auv_product.dart';
+import '../models/auv_match_model.dart' hide AuvProduct;
+import '../models/base/auv_base_response.dart';
+import '../models/product/auv_country_product_response.dart';
+import '../models/product/auv_product_with_coupon_response.dart';
+
 /// 支付服务
 /// 
 /// 处理支付相关接口：订单、优惠券、降档营销，金币商城等
@@ -41,14 +48,44 @@ class AuvPaymentService extends AuvBaseService {
   }
 
   /// 按国家获取单个商品
-  /// 
-  /// 获取特定国家的商品价格信息
-  /// 
+  /// 按国家获取单个商品
+  ///
+  /// 获取特定国家的商品详细信息，包含支付渠道列表
+  ///
+  /// 【请求参数】
   /// [productId] 商品ID（必填）
   /// [countryCode] 国家代码（必填），用于获取当地价格
-  /// 
-  /// 返回值: 商品信息
-  Future<AuvBaseResponse<AuvProduct>> getCountryProduct({
+  ///
+  /// 【返回值】
+  /// 返回商品信息:
+  ///   - productId: 商品id
+  ///   - productCode: 商品编码
+  ///   - price: 美元价格（单位分）
+  ///   - diamonds: 钻石数
+  ///   - bonus: 赠送钻石数
+  ///   - vipDays: vip天数
+  ///   - callCardNum: 视频卡数量
+  ///   - matchCardNum: 匹配卡数量
+  ///   - chatCardNum: 聊天卡数量
+  ///   - productType: 商品类型（1.普通商品，2.折扣商品，3.vip商品）
+  ///   - discountType: 折扣类型（1.首充折扣，2.单次折扣，3.限时折扣）
+  ///   - discount: 折扣百分比
+  ///   - currencyPrice: 当地货币价格（单位分）
+  ///   - currencyCode: 货币编码
+  ///   - ppp: 支付渠道列表
+  ///
+  /// 示例:
+  /// ```dart
+  /// final result = await paymentService.getCountryProduct(
+  ///   productId: 1,
+  ///   countryCode: 840,
+  /// );
+  /// if (result.success && result.data != null) {
+  ///   print('商品价格: ${result.data!.formattedCurrencyPrice}');
+  ///   print('支付渠道: ${result.data!.ppp?.length}');
+  /// }
+  /// ```
+  Future<AuvBaseResponse<AuvCountryProductResponse>> getCountryProduct({
     required int productId,
     required int countryCode,
   }) async {
@@ -60,12 +97,12 @@ class AuvPaymentService extends AuvBaseService {
           'countryCode': countryCode,
         },
       );
-      return handleResponse<AuvProduct>(
+      return handleResponse<AuvCountryProductResponse>(
         response.data,
-        (data) => AuvProduct.fromJson(data),
+        (data) => AuvCountryProductResponse.fromJson(data),
       );
     } catch (e) {
-      return handleError<AuvProduct>(e);
+      return handleError<AuvCountryProductResponse>(e);
     }
   }
 

@@ -1309,6 +1309,18 @@ abstract class AuvNetRoutes {
   /// 说明: 获取敏感词库，包含引流词、私聊敏感词、公聊敏感词
   static const String getSensitiveWordsV2 = '/system/sensitive/getSensitiveWordsV2';
 
+  /// 获取S3上传链接V2
+  /// 请求方式: GET
+  /// 参数:
+  ///   - suffix: 文件后缀（必填），如 png、jpg
+  /// 返回数据:
+  ///   - uploadUrl: 上传用的链接
+  ///   - publicUrl: 访问用的链接
+  ///   - filePath: 文件相对路径
+  /// 说明: 获取S3预签名上传URL
+  /// 需要认证: 是
+  static const String getS3UploadUrlV2 = '/system/app/getS3UploadUrlV2';
+
   /// 获取通话记录
   /// 请求方式: POST
   /// Body参数:

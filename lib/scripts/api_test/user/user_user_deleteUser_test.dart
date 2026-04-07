@@ -1,4 +1,8 @@
 /// 注销账号
+library;
+
+// API response data
+
 ///
 /// 接口: /user/user/deleteUser
 /// 请求方式: POST

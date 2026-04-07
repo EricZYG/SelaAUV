@@ -1,4 +1,8 @@
 /// 接口: /user/anchorMoment/userGetMoment
+library;
+
+// API response data
+
 /// 方法: GET
 /// 状态: 失败
 /// code: 1001

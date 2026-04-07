@@ -3,9 +3,11 @@
 /// 状态: 失败
 /// code: None
 /// message: None
-
+///
 /// 响应数据:
 /// ```json
+library;
+
 {
   "timestamp": 1775465289077,
   "path": "/gift/list",
